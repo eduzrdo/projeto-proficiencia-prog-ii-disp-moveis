@@ -1,0 +1,36 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  username String  @unique
+  avatar   String
+  email    String  @unique
+  password String
+  score    Float   @default(0)
+  wins     Int     @default(0)
+  defeats  Int     @default(0)
+  admin    Boolean @default(false)
+  // guessedWords Word[]   @relation(fields: [wordsIDs], references: [id])
+  // wordsIDs     String[] @db.ObjectId
+  // gameHistory
+  // friends
+}
+
+// model Word {
+//   id         String @id @default(uuid()) @map("_id") @db.ObjectId
+//   word       String @unique
+//   language   String
+//   difficulty Int
+//   // users    User[]   @relation(fields: [usersIDs], references: [id])
+//   // usersIDs String[] @db.ObjectId
+// }
