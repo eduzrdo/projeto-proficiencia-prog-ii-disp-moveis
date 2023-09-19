@@ -1,37 +1,50 @@
 import { Tabs } from "expo-router";
-import { MaterialIcons } from '@expo/vector-icons'
-import { StatusBar } from 'expo-status-bar'
+import { MaterialIcons } from "@expo/vector-icons";
+import { StatusBar } from "expo-status-bar";
+
+import { colors } from "@/constants";
+
+import HomeIcon from "@/assets/svgs/home-icon.svg";
+import MedalIcon from "@/assets/svgs/medal-icon.svg";
+// import UserSettings from '@/assets/svgs/user-settings-icon.svg';
 
 export default function RootTabsLayout() {
   return (
     <>
-      <Tabs screenOptions={{ headerShown: false }}>
+      <Tabs
+        screenOptions={{ headerShown: false, tabBarShowLabel: false }}
+        sceneContainerStyle={{
+          backgroundColor: colors.light["100"],
+        }}
+      >
         <Tabs.Screen
-          name='index'
+          name="index"
           options={{
-            title: 'Início',
-            tabBarIcon: ({ size, focused }) => <MaterialIcons name='home' size={size} color={focused ? '#008870' : '#cfcfcf'} />
-          }}
-        />  
-
-        <Tabs.Screen
-          name='profile'
-          options={{
-            title: 'Perfil',
-            tabBarIcon: ({ size, focused }) => <MaterialIcons name='person' size={size} color={focused ? '#008870' : '#cfcfcf'} />
+            tabBarIcon: ({ size, focused }) => (
+              <HomeIcon
+                width={size}
+                height={size}
+                fill={focused ? colors.primary[700] : colors.light[300]}
+              />
+            ),
           }}
         />
 
         <Tabs.Screen
-          name='settings'
+          name="leaderboard"
           options={{
-            title: 'Perfil',
-            tabBarIcon: ({ size, focused }) => <MaterialIcons name='settings' size={size} color={focused ? '#008870' : '#cfcfcf'} />
+            tabBarIcon: ({ size, focused }) => (
+              <MedalIcon
+                width={size}
+                height={size}
+                fill={focused ? colors.primary[700] : colors.light[300]}
+              />
+            ),
           }}
         />
       </Tabs>
 
       <StatusBar backgroundColor="transparent" translucent />
     </>
-  )
+  );
 }
