@@ -8,6 +8,7 @@ export const ScreenFrame = ({ children }: PropsWithChildren) => {
         flex: 1,
         paddingTop: 60,
         paddingHorizontal: 20,
+        gap: 36,
       }}
     >
       {children}

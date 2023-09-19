@@ -1,3 +1,5 @@
+import { TextStyle } from 'react-native'
+
 export const colors = {
   primary: {
     500: '#06F9F9',
@@ -14,10 +16,43 @@ export const colors = {
     900: '#121212',
   },
 
+  ranks: {
+    copper: '#FB923C',
+    silver: '#DCDCE2',
+    gold: '#FFD631',
+  },
+
   white: '#fff',
   black: '#000',
 }
 
 export const sizes = {
   borderRadius: 8,
+}
+
+export const typography: { [key: string]: TextStyle } = {
+  text: {
+    fontSize: 14,
+    color: colors.light['800'],
+    fontWeight: '600'
+  },
+  textGray: {
+    fontSize: 14,
+    color: colors.light['600'],
+  },
+  button: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: colors.light['800'],
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '600',
+    color: colors.light['800']
+  },
+  subtitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: colors.light['800']
+  }
 }

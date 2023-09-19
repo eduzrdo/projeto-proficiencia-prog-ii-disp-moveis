@@ -6,7 +6,7 @@ import {
 
 import { Button } from "@/components/Button";
 import HangmanLogotype from "@/assets/svgs/hangman-game-logotype.svg";
-import { colors } from "@/constants";
+import { colors, typography } from "@/constants";
 
 export default function Home() {
   const screenWidth = Dimensions.get("screen").width;
@@ -34,7 +34,7 @@ export default function Home() {
         <Button fullWidth onPress={handleLogin} title="Login com o Google" />
 
         <Link href="/(tabs)">
-          <Text style={styles.guestText}>Continuar como convidado</Text>
+          <Text style={typography.button}>Continuar como convidado</Text>
         </Link>
       </View>
     </View>

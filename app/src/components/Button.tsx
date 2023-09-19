@@ -6,7 +6,8 @@ import {
   View,
 } from "react-native";
 
-import { colors, sizes } from "@/constants";
+import { colors, sizes, typography } from "@/constants";
+import { ThickShadow } from "./ThickShadow";
 
 type ButtonProps = TouchableOpacityProps & {
   title: string;
@@ -16,16 +17,16 @@ type ButtonProps = TouchableOpacityProps & {
 
 export const Button = ({ title, fullWidth, ...rest }: ButtonProps) => {
   return (
-    <View style={[styles.buttonWrapper, { width: fullWidth ? '100%' : 300 }]}>
+    <View style={[styles.buttonWrapper, { width: fullWidth ? "100%" : 300 }]}>
       {/* {Icon && (
         <Icon />
       )} */}
 
       <TouchableOpacity style={styles.button} activeOpacity={1} {...rest}>
-        <Text style={styles.buttonText}>{title}</Text>
+        <Text style={typography.button}>{title}</Text>
       </TouchableOpacity>
 
-      <View style={styles.shadow} />
+      <ThickShadow />
     </View>
   );
 };
@@ -43,10 +44,6 @@ const styles = StyleSheet.create({
     borderRadius: sizes.borderRadius,
     borderColor: colors.primary[800],
     color: colors.primary[800],
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: "600",
   },
   shadow: {
     position: "absolute",
