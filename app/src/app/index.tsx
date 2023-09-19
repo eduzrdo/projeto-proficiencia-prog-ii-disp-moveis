@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    gap: 28,
+    gap: 40,
   },
   guestText: {
     fontSize: 16,
