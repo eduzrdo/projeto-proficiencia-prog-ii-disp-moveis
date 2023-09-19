@@ -1,7 +1,9 @@
-import { Button, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { Link } from "expo-router";
 
-export default function Profile() {
+import { Button } from "@/components/Button";
+
+export default function Leaderboard() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <Text style={{ fontSize: 36 }}>Perfil</Text>

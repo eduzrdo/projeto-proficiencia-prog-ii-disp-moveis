@@ -1,16 +1,16 @@
-import { Text, View } from "react-native";
-import { Link } from "expo-router";
-
-import { Button } from "@/components/Button";
+import { Text, View, StyleSheet } from "react-native";
 
 export default function Home() {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text style={{ fontSize: 36 }}>Início</Text>
-
-      <Link href='/settings' asChild>
-        <Button title="Configurações" />
-      </Link>
+    <View style={styles.container}>
+      <Text>Inicio</Text>
     </View>
-  )
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+  },
+});
