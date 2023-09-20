@@ -33,13 +33,17 @@ export const sizes = {
 export const typography: { [key: string]: TextStyle } = {
   text: {
     fontFamily: 'Inter_400Regular',
-    fontSize: 14,
+    fontSize: 16,
     color: colors.light['800'],
   },
   textSemibold: {
     fontFamily: 'Inter_600SemiBold',
-    fontSize: 14,
+    fontSize: 16,
     color: colors.light['800'],
+  },
+  smallText: {
+    fontFamily: 'Inter_400Regular',
+    fontSize: 14,
   },
   button: {
     fontFamily: 'Inter_600SemiBold',

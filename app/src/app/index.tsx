@@ -41,7 +41,7 @@ export default function Home() {
         />
 
         <Link href="/(tabs)">
-          <Text style={typography.button}>Continuar como convidado</Text>
+          <Text style={typography.textSemibold}>Continuar como convidado</Text>
         </Link>
       </View>
     </View>

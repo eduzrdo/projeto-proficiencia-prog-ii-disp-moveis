@@ -1,5 +1,6 @@
 {
   "replaceAttrValues": {
-    "#fff": "{props.fill}"
+    "#fff": "{props.fill}",
+    "expandProps": "start"
   }
 }

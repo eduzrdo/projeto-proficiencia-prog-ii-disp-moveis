@@ -15,16 +15,21 @@ import GamepadIcon from "@/assets/svgs/gamepad-icon.svg";
 import profilePicture from "@/assets/images/profile-picture-placeholder.png";
 
 export default function Home() {
+  const authenticatedUser = {
+    id: "4a1d5bb8-2b3e-407c-bf7d-a30957f8dd6c",
+    avatarUrl: "https://avatars.githubusercontent.com/u/43072438?v=4",
+  };
+
   return (
     <ScreenFrame>
       <View style={styles.welcomeContainer}>
         <Title>Bom dia, Eduardo!</Title>
 
-        <Link href="/profile" asChild>
+        <Link href={`/profile/${authenticatedUser.id}`} asChild>
           <Pressable>
             <Avatar
               source={{
-                uri: "https://avatars.githubusercontent.com/u/43072438?v=4",
+                uri: authenticatedUser.avatarUrl,
               }}
             />
           </Pressable>
@@ -55,23 +60,38 @@ export default function Home() {
         <Text style={typography.subtitle}>Melhores Jogadores</Text>
 
         {Array(3)
-          .fill(0)
+          .fill({
+            id: 1,
+            rank: 1,
+            avatarUrl: "https://avatars.githubusercontent.com/u/43072438?v=4",
+            score: 153902,
+          })
+          .map((player, index) => {
+            return {
+              ...player,
+              id: player.id + index,
+              rank: player.rank + index,
+            };
+          })
           .map((player, index) => (
             <PlayerCard
               key={index}
-              rank={42}
-              avatarUrl="https://avatars.githubusercontent.com/u/43072438?v=4"
+              playerId={player.id}
+              rank={player.rank}
+              avatarUrl={player.avatarUrl}
+              score={player.score}
             />
           ))}
       </View>
 
       <View style={styles.playButtonContainer}>
         <View style={styles.playButtonWrapper}>
-          <Pressable style={styles.playButton}>
-            <GamepadIcon width={32} height={32} fill={colors.light["800"]} />
-            <Text style={styles.playButtonText}>JOGAR</Text>
-          </Pressable>
-
+          <Link href="/game" asChild>
+            <Pressable style={styles.playButton}>
+              <GamepadIcon width={32} height={32} fill={colors.light["800"]} />
+              <Text style={styles.playButtonText}>JOGAR</Text>
+            </Pressable>
+          </Link>
           <ThickShadow />
         </View>
       </View>
