@@ -1,7 +1,10 @@
 import { Text, View, StyleSheet, Image, Pressable } from "react-native";
+import { Link } from "expo-router";
 
 import { ScreenFrame } from "@/components/ScreenFrame";
 import { ThickShadow } from "@/components/ThickShadow";
+import { Title } from "@/components/Title";
+
 import { colors, sizes, typography } from "@/constants";
 
 import TrophyIcon from "@/assets/svgs/trophy-icon.svg";
@@ -12,13 +15,13 @@ export default function Home() {
   return (
     <ScreenFrame>
       <View style={styles.welcomeContainer}>
-        <Text style={{ fontSize: 24 }}>
-          Bom dia, <Text style={typography.title}>Eduardo!</Text>
-        </Text>
+        <Title>Bom dia, Eduardo!</Title>
 
-        <Pressable>
-          <Image source={profilePicture} style={styles.userAvatar} />
-        </Pressable>
+        <Link href="/profile" asChild>
+          <Pressable>
+            <Image source={profilePicture} style={styles.userAvatar} />
+          </Pressable>
+        </Link>
       </View>
 
       <View>
@@ -47,7 +50,7 @@ export default function Home() {
         {Array(3)
           .fill(0)
           .map((player, index) => (
-            <View style={styles.bestPlayer}>
+            <View key={index} style={styles.bestPlayer}>
               <Image source={profilePicture} style={styles.userAvatar} />
 
               <View style={styles.userScore}>
