@@ -36,10 +36,6 @@ export const typography: { [key: string]: TextStyle } = {
     color: colors.light['800'],
     fontWeight: '600'
   },
-  textGray: {
-    fontSize: 14,
-    color: colors.light['600'],
-  },
   button: {
     fontSize: 18,
     fontWeight: '600',

@@ -26,6 +26,10 @@ export const Button = ({ title, fullWidth, ...rest }: ButtonProps) => {
         <Text style={typography.button}>{title}</Text>
       </TouchableOpacity>
 
+      {/* {Icon && (
+        <View />
+      )} */}
+
       <ThickShadow />
     </View>
   );

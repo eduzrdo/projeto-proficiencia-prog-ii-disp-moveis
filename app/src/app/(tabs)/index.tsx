@@ -102,7 +102,10 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 8,
   },
-  scoreTitle: typography.textGray,
+  scoreTitle: {
+    ...typography.textGray,
+    color: colors.light["600"],
+  },
   scoreText: typography.text,
   trophyWrapper: {
     width: 48,
