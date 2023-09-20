@@ -1,9 +1,37 @@
+import { useCallback } from "react";
 import { colors } from "@/constants";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { View } from "react-native";
+import * as SplashScreen from "expo-splash-screen";
+import {
+  useFonts,
+  Inter_400Regular,
+  Inter_600SemiBold,
+} from "@expo-google-fonts/inter";
+import { Text, View } from "react-native";
 
-export default function RootTabsLayout() {
+SplashScreen.preventAutoHideAsync();
+
+export default function RootLayout() {
+  const [fontsLoaded] = useFonts({
+    Inter_400Regular,
+    Inter_600SemiBold,
+  });
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return (
+      <View onLayout={onLayoutRootView}>
+        <Text>Carregando fontes</Text>
+      </View>
+    );
+  }
+
   return (
     <>
       <Stack

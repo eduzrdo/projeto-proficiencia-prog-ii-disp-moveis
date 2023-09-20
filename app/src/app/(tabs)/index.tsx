@@ -28,7 +28,7 @@ export default function Home() {
         <View style={styles.userScoreContainer}>
           <View style={styles.userScore}>
             <Text style={styles.scoreTitle}>Sua pontuação</Text>
-            <Text style={styles.scoreText}>153.902 pontos</Text>
+            <Text style={typography.textSemibold}>153.902 pontos</Text>
           </View>
 
           <View
@@ -55,7 +55,7 @@ export default function Home() {
 
               <View style={styles.userScore}>
                 <Text style={styles.scoreTitle}>Sua pontuação</Text>
-                <Text style={styles.scoreText}>153.902 pontos</Text>
+                <Text style={typography.textSemibold}>153.902 pontos</Text>
               </View>
             </View>
           ))}
@@ -103,10 +103,9 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   scoreTitle: {
-    ...typography.textGray,
+    ...typography.text,
     color: colors.light["600"],
   },
-  scoreText: typography.text,
   trophyWrapper: {
     width: 48,
     height: 48,
@@ -141,8 +140,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   playButtonText: {
+    ...typography.textSemibold,
     fontSize: 20,
-    fontWeight: "600",
-    color: colors.light["800"],
   },
 });

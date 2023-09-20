@@ -32,23 +32,28 @@ export const sizes = {
 
 export const typography: { [key: string]: TextStyle } = {
   text: {
+    fontFamily: 'Inter_400Regular',
     fontSize: 14,
     color: colors.light['800'],
-    fontWeight: '600'
+  },
+  textSemibold: {
+    fontFamily: 'Inter_600SemiBold',
+    fontSize: 14,
+    color: colors.light['800'],
   },
   button: {
+    fontFamily: 'Inter_600SemiBold',
     fontSize: 18,
-    fontWeight: '600',
     color: colors.light['800'],
   },
   title: {
+    fontFamily: 'Inter_600SemiBold',
     fontSize: 24,
-    fontWeight: '600',
     color: colors.light['800']
   },
   subtitle: {
+    fontFamily: 'Inter_600SemiBold',
     fontSize: 18,
-    fontWeight: '600',
     color: colors.light['800']
   }
 }
