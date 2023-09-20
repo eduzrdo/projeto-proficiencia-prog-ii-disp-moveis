@@ -5,8 +5,10 @@ import {
 } from "expo-router";
 
 import { Button } from "@/components/Button";
-import HangmanLogotype from "@/assets/svgs/hangman-game-logotype.svg";
 import { colors, typography } from "@/constants";
+
+import HangmanLogotype from "@/assets/svgs/hangman-game-logotype.svg";
+import GoogleIcon from "@/assets/svgs/google-icon.svg";
 
 export default function Home() {
   const screenWidth = Dimensions.get("screen").width;
@@ -31,7 +33,12 @@ export default function Home() {
       </View>
 
       <View style={styles.buttonsContainer}>
-        <Button fullWidth onPress={handleLogin} title="Login com o Google" />
+        <Button
+          fullWidth
+          icon={GoogleIcon}
+          onPress={handleLogin}
+          title="Login com o Google"
+        />
 
         <Link href="/(tabs)">
           <Text style={typography.button}>Continuar como convidado</Text>

@@ -5,31 +5,33 @@ import {
   TouchableOpacityProps,
   View,
 } from "react-native";
+import { SvgProps } from "react-native-svg";
+
+import { ThickShadow } from "./ThickShadow";
 
 import { colors, sizes, typography } from "@/constants";
-import { ThickShadow } from "./ThickShadow";
 
 type ButtonProps = TouchableOpacityProps & {
   title: string;
   fullWidth?: boolean;
-  // icon?: React.ReactNode;
+  icon?: React.FC<SvgProps>;
 };
 
-export const Button = ({ title, fullWidth, ...rest }: ButtonProps) => {
+export const Button = ({
+  title,
+  icon: Icon,
+  fullWidth,
+  ...rest
+}: ButtonProps) => {
   return (
     <View style={[styles.buttonWrapper, { width: fullWidth ? "100%" : 300 }]}>
-      {/* {Icon && (
-        <Icon />
-      )} */}
-
       <TouchableOpacity style={styles.button} activeOpacity={1} {...rest}>
+        {Icon && <Icon />}
+
         <Text style={typography.button}>{title}</Text>
+
+        {Icon && <View style={{ width: 24, height: 24 }} />}
       </TouchableOpacity>
-
-      {/* {Icon && (
-        <View />
-      )} */}
-
       <ThickShadow />
     </View>
   );
@@ -40,8 +42,11 @@ const styles = StyleSheet.create({
     height: 48,
   },
   button: {
-    justifyContent: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
+    paddingHorizontal: 20,
+    gap: 20,
     height: 48,
     backgroundColor: colors.white,
     borderWidth: 1,
