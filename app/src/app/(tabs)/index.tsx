@@ -4,11 +4,14 @@ import { Link } from "expo-router";
 import { ScreenFrame } from "@/components/ScreenFrame";
 import { ThickShadow } from "@/components/ThickShadow";
 import { Title } from "@/components/Title";
+import { Avatar } from "@/components/Avatar";
+import { PlayerCard } from "@/components/PlayerCard";
 
 import { colors, sizes, typography } from "@/constants";
 
 import TrophyIcon from "@/assets/svgs/trophy-icon.svg";
 import GamepadIcon from "@/assets/svgs/gamepad-icon.svg";
+
 import profilePicture from "@/assets/images/profile-picture-placeholder.png";
 
 export default function Home() {
@@ -19,7 +22,11 @@ export default function Home() {
 
         <Link href="/profile" asChild>
           <Pressable>
-            <Image source={profilePicture} style={styles.userAvatar} />
+            <Avatar
+              source={{
+                uri: "https://avatars.githubusercontent.com/u/43072438?v=4",
+              }}
+            />
           </Pressable>
         </Link>
       </View>
@@ -50,14 +57,11 @@ export default function Home() {
         {Array(3)
           .fill(0)
           .map((player, index) => (
-            <View key={index} style={styles.bestPlayer}>
-              <Image source={profilePicture} style={styles.userAvatar} />
-
-              <View style={styles.userScore}>
-                <Text style={styles.scoreTitle}>Sua pontuação</Text>
-                <Text style={typography.textSemibold}>153.902 pontos</Text>
-              </View>
-            </View>
+            <PlayerCard
+              key={index}
+              rank={42}
+              avatarUrl="https://avatars.githubusercontent.com/u/43072438?v=4"
+            />
           ))}
       </View>
 
@@ -85,7 +89,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "600",
   },
-  userAvatar: { width: 56, height: 56, borderRadius: sizes.borderRadius },
   userScoreContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -114,11 +117,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   bestPlayersContainer: {
-    gap: 20,
-  },
-  bestPlayer: {
-    flexDirection: "row",
-    alignItems: "center",
     gap: 20,
   },
   playButtonContainer: {

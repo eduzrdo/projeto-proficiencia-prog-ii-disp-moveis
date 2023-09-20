@@ -24,12 +24,17 @@ export default function RootLayout() {
     }
   }, [fontsLoaded]);
 
+  // // TO BE REMOVED, use splash screen instead
+  // if (!fontsLoaded) {
+  //   return (
+  //     <View onLayout={onLayoutRootView}>
+  //       <Text>Carregando fontes</Text>
+  //     </View>
+  //   );
+  // }
+
   if (!fontsLoaded) {
-    return (
-      <View onLayout={onLayoutRootView}>
-        <Text>Carregando fontes</Text>
-      </View>
-    );
+    return null;
   }
 
   return (
