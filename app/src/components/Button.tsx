@@ -16,26 +16,17 @@ type ButtonProps = TouchableOpacityProps & {
   title: string;
   width?: DimensionValue;
   icon?: React.FC<SvgProps>;
-  isLetterButton?: boolean;
 };
 
 export const Button = ({
   icon: Icon,
   title,
   width = 300,
-  isLetterButton,
   ...rest
 }: ButtonProps) => {
-  const buttonPadding = isLetterButton ? 0 : 20;
-  width = isLetterButton ? 39 : width;
-
   return (
     <View style={[styles.buttonWrapper, { width }]}>
-      <TouchableOpacity
-        style={[styles.button, { paddingHorizontal: buttonPadding }]}
-        activeOpacity={1}
-        {...rest}
-      >
+      <TouchableOpacity style={styles.button} activeOpacity={1} {...rest}>
         {Icon && <Icon />}
 
         <Text style={[typography.button, styles.buttonText]}>{title}</Text>
@@ -57,6 +48,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 20,
     height: 48,
+    paddingHorizontal: 20,
     backgroundColor: colors.white,
     borderWidth: 1,
     borderRadius: sizes.borderRadius,

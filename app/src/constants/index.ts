@@ -24,6 +24,9 @@ export const colors = {
 
   white: '#fff',
   black: '#000',
+
+  correct: '#0FA31E',
+  wrong: '#DF3333',
 }
 
 export const sizes = {

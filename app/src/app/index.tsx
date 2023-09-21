@@ -40,7 +40,7 @@ export default function Home() {
           title="Login com o Google"
         />
 
-        <Link href="/(tabs)">
+        <Link href="/(tabs)" replace>
           <Text style={typography.textSemibold}>Continuar como convidado</Text>
         </Link>
       </View>
