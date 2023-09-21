@@ -14,7 +14,7 @@ export const ThickShadow = ({ color }: ThickShadowProps) => {
           styles.shadow,
           {
             backgroundColor: color ? color : colors.light[900],
-            opacity: color ? 0.25 : 1,
+            opacity: color ? 0.4 : 1,
           },
         ]}
       />

@@ -21,19 +21,23 @@ type ButtonProps = TouchableOpacityProps & {
 export const Button = ({
   icon: Icon,
   title,
-  width = 300,
+  width = "100%",
   ...rest
 }: ButtonProps) => {
   return (
     <View style={[styles.buttonWrapper, { width }]}>
-      <TouchableOpacity style={styles.button} activeOpacity={1} {...rest}>
+      <TouchableOpacity
+        style={[styles.button, { opacity: rest.disabled ? 0.3 : 1 }]}
+        activeOpacity={1}
+        {...rest}
+      >
         {Icon && <Icon />}
 
         <Text style={[typography.button, styles.buttonText]}>{title}</Text>
 
         {Icon && <View style={{ width: 24, height: 24 }} />}
       </TouchableOpacity>
-      <ThickShadow />
+      <ThickShadow color={rest.disabled ? colors.light["400"] : undefined} />
     </View>
   );
 };

@@ -23,8 +23,6 @@ export default function Game() {
   const handleChooseLetter = (letter: string) => {
     if (mistakesCount === 6) return;
 
-    console.log("BUTTON PRESSED");
-
     const foundIndexes = drawnWord.reduce(
       (indexes: number[], element: string, index: number) => {
         if (letter === element) {

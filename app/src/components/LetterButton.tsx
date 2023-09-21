@@ -27,8 +27,6 @@ export const LetterButton = ({
 }: LetterButtonProps) => {
   const [disabled, setDisabled] = useState(false);
 
-  console.log("LetterButtonRenderd");
-
   const color = colorFeedback === "correct" ? colors.correct : colors.wrong;
 
   const handleOnPress = (event: GestureResponderEvent) => {

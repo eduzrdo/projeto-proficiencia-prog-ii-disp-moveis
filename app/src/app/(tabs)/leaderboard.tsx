@@ -5,6 +5,7 @@ import { TextInput, View, FlatList, StyleSheet } from "react-native";
 import { ScreenFrame } from "@/components/ScreenFrame";
 import { ScreenHeader } from "@/components/ScreenHeader";
 import { PlayerCard } from "@/components/PlayerCard";
+import { Input } from "@/components/Input";
 // import { Button } from "@/components/Button";
 
 import { colors, sizes, typography } from "@/constants";
@@ -44,16 +45,12 @@ export default function Leaderboard() {
     <ScreenFrame>
       <ScreenHeader title="Melhores Jogadores" />
 
-      <View style={styles.searcFieldWrapper}>
-        <MagnifyingGlassIcon fill={colors.light["400"]} />
-        <TextInput
-          placeholder="Buscar jogadores"
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          placeholderTextColor={colors.light["400"]}
-          style={styles.searchField}
-        />
-      </View>
+      <Input
+        placeholder="Buscar jogadores"
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+        icon={MagnifyingGlassIcon}
+      />
 
       <View style={styles.flatListContainer}>
         <FlatList

@@ -3,6 +3,7 @@ import { TextStyle } from 'react-native'
 export const colors = {
   primary: {
     500: '#06F9F9',
+    600: '#00DDDD',
     700: '#07A1A1',
     800: '#1F1F1F'
   },
