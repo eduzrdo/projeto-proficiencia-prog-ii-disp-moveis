@@ -34,7 +34,7 @@ export default function Home() {
 
       <View style={styles.buttonsContainer}>
         <Button
-          fullWidth
+          width="100%"
           icon={GoogleIcon}
           onPress={handleLogin}
           title="Login com o Google"

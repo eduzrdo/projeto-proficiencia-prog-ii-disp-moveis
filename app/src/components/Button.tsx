@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   TouchableOpacityProps,
   View,
+  DimensionValue,
 } from "react-native";
 import { SvgProps } from "react-native-svg";
 
@@ -13,22 +14,31 @@ import { colors, sizes, typography } from "@/constants";
 
 type ButtonProps = TouchableOpacityProps & {
   title: string;
-  fullWidth?: boolean;
+  width?: DimensionValue;
   icon?: React.FC<SvgProps>;
+  isLetterButton?: boolean;
 };
 
 export const Button = ({
-  title,
   icon: Icon,
-  fullWidth,
+  title,
+  width = 300,
+  isLetterButton,
   ...rest
 }: ButtonProps) => {
+  const buttonPadding = isLetterButton ? 0 : 20;
+  width = isLetterButton ? 39 : width;
+
   return (
-    <View style={[styles.buttonWrapper, { width: fullWidth ? "100%" : 300 }]}>
-      <TouchableOpacity style={styles.button} activeOpacity={1} {...rest}>
+    <View style={[styles.buttonWrapper, { width }]}>
+      <TouchableOpacity
+        style={[styles.button, { paddingHorizontal: buttonPadding }]}
+        activeOpacity={1}
+        {...rest}
+      >
         {Icon && <Icon />}
 
-        <Text style={typography.button}>{title}</Text>
+        <Text style={[typography.button, styles.buttonText]}>{title}</Text>
 
         {Icon && <View style={{ width: 24, height: 24 }} />}
       </TouchableOpacity>
@@ -45,7 +55,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 20,
     gap: 20,
     height: 48,
     backgroundColor: colors.white,
@@ -54,13 +63,8 @@ const styles = StyleSheet.create({
     borderColor: colors.primary[800],
     color: colors.primary[800],
   },
-  shadow: {
-    position: "absolute",
-    top: 6,
-    height: "100%",
-    width: "100%",
-    backgroundColor: colors.light[900],
-    borderRadius: sizes.borderRadius,
-    zIndex: -1,
+  buttonText: {
+    flex: 1,
+    textAlign: "center",
   },
 });
