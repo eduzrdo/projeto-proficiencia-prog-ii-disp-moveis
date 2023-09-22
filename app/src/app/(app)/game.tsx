@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useNavigation } from "expo-router";
 
 import { ScreenFrame } from "@/components/ScreenFrame";
@@ -8,10 +8,12 @@ import { Letter } from "@/components/Letter";
 import { Face } from "@/components/Face";
 import { LetterButton } from "@/components/LetterButton";
 
-import { colors } from "@/constants";
+import { colors, typography } from "@/constants";
 import { letters } from "@/utils/letters";
+import { normalizeWord } from "@/utils/normalizeWords";
 
 import FlagIcon from "@/assets/svgs/flag-icon.svg";
+import LightbulbIcon from "@/assets/svgs/lightbulb-icon.svg";
 
 export default function Game() {
   const [drawnWord, setDrawnWord] = useState<string[]>([]);
@@ -63,9 +65,18 @@ export default function Game() {
       </View>
 
       <View style={styles.lettersContainer}>
-        {ongoingWord.map((letter, index) => (
-          <Letter key={index} letter={letter} />
-        ))}
+        <View style={styles.tipWrapper}>
+          <View style={styles.tipIconWrapper}>
+            <LightbulbIcon width={16} height={16} fill={colors.white} />
+          </View>
+          <Text style={styles.tipText}>Tecnologia</Text>
+        </View>
+
+        <View style={styles.letterFields}>
+          {ongoingWord.map((letter, index) => (
+            <Letter key={index} letter={letter} />
+          ))}
+        </View>
       </View>
 
       <View style={styles.faceWrapper}>
@@ -95,6 +106,27 @@ const styles = StyleSheet.create({
   },
   lettersContainer: {
     flex: 3,
+    gap: 20,
+  },
+  tipWrapper: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 8,
+  },
+  tipIconWrapper: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: colors.primary["600"],
+  },
+  tipText: {
+    ...typography.textSemibold,
+    color: colors.light["800"],
+  },
+  letterFields: {
     flexDirection: "row",
     justifyContent: "center",
     flexWrap: "wrap",

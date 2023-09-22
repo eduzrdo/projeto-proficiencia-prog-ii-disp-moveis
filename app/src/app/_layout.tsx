@@ -8,7 +8,8 @@ import {
   Inter_400Regular,
   Inter_600SemiBold,
 } from "@expo-google-fonts/inter";
-import { Text, View } from "react-native";
+
+import { UserContextProvider } from "@/hooks/UserContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -38,21 +39,14 @@ export default function RootLayout() {
   }
 
   return (
-    <>
+    <UserContextProvider>
       <Stack
         screenOptions={{
           headerShown: false,
-          contentStyle: {
-            backgroundColor: colors.light["100"],
-          },
         }}
-      >
-        <Stack.Screen name="index" />
-
-        <Stack.Screen name="(tabs)" />
-      </Stack>
+      />
 
       <StatusBar backgroundColor="transparent" translucent />
-    </>
+    </UserContextProvider>
   );
 }

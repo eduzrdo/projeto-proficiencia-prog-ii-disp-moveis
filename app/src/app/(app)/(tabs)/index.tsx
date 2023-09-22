@@ -1,4 +1,11 @@
-import { Text, View, StyleSheet, Image, Pressable } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import { Link } from "expo-router";
 
 import { ScreenFrame } from "@/components/ScreenFrame";
@@ -13,24 +20,29 @@ import TrophyIcon from "@/assets/svgs/trophy-icon.svg";
 import GamepadIcon from "@/assets/svgs/gamepad-icon.svg";
 
 import profilePicture from "@/assets/images/profile-picture-placeholder.png";
+import { useUser } from "@/hooks/UserContext";
+import { Loading } from "@/components/Loading";
 
 export default function Home() {
-  const authenticatedUser = {
-    id: "4a1d5bb8-2b3e-407c-bf7d-a30957f8dd6c",
-    avatarUrl: "https://avatars.githubusercontent.com/u/43072438?v=4",
-  };
+  const { user } = useUser();
+
+  if (!user) return <Loading stretch />;
 
   return (
     <ScreenFrame>
       <View style={styles.welcomeContainer}>
         <Title>Bom dia, Eduardo!</Title>
 
-        <Link href={`/profile/${authenticatedUser.id}`} asChild>
+        <Link href={`/profile/${user.id}`} asChild>
           <Pressable>
             <Avatar
-              source={{
-                uri: authenticatedUser.avatarUrl,
-              }}
+              source={
+                user.avatar
+                  ? {
+                      uri: user.avatar,
+                    }
+                  : profilePicture
+              }
             />
           </Pressable>
         </Link>

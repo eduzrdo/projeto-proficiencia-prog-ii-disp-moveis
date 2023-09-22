@@ -8,7 +8,8 @@ import {
 } from "react-native";
 import { SvgProps } from "react-native-svg";
 
-import { ThickShadow } from "./ThickShadow";
+import { ThickShadow } from "@/components/ThickShadow";
+import { Loading } from "@/components/Loading";
 
 import { colors, sizes, typography } from "@/constants";
 
@@ -16,12 +17,14 @@ type ButtonProps = TouchableOpacityProps & {
   title: string;
   width?: DimensionValue;
   icon?: React.FC<SvgProps>;
+  loading?: boolean;
 };
 
 export const Button = ({
-  icon: Icon,
   title,
   width = "100%",
+  icon: Icon,
+  loading,
   ...rest
 }: ButtonProps) => {
   return (
@@ -33,7 +36,11 @@ export const Button = ({
       >
         {Icon && <Icon />}
 
-        <Text style={[typography.button, styles.buttonText]}>{title}</Text>
+        {loading ? (
+          <Loading stretch size="small" />
+        ) : (
+          <Text style={[typography.button, styles.buttonText]}>{title}</Text>
+        )}
 
         {Icon && <View style={{ width: 24, height: 24 }} />}
       </TouchableOpacity>

@@ -1,24 +1,32 @@
-import { useState } from "react";
-import { View, Text, Dimensions, StyleSheet } from "react-native";
+import { useEffect, useState } from "react";
+import { View, Text, Dimensions, StyleSheet, Alert } from "react-native";
 import {
   Link,
+  router,
   // useNavigation
 } from "expo-router";
 
 import { ScreenFrame } from "@/components/ScreenFrame";
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
+import { Info } from "@/components/Info";
 
 import { colors, typography } from "@/constants";
+import { useUser } from "@/hooks/UserContext";
 
 import HangmanLogotype from "@/assets/svgs/hangman-game-logotype.svg";
 import AtSignIcon from "@/assets/svgs/at-sign-icon.svg";
 import KeyIcon from "@/assets/svgs/key-icon.svg";
 // import GoogleIcon from "@/assets/svgs/google-icon.svg";
 
-export default function Home() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+export default function SignIn() {
+  const [username, setUsername] = useState("user02");
+  const [password, setPassword] = useState("121212");
+  const [showPassword, setShowPassword] = useState(false);
+  const [signInButtonIsDisabled, setSignInButtonIsDisabled] = useState(true);
+  const [error, setError] = useState("");
+
+  const { signIn, loading } = useUser();
 
   const screenWidth = Dimensions.get("screen").width;
   const logotypeScaleFactor = screenWidth / 103.76;
@@ -26,10 +34,40 @@ export default function Home() {
 
   // const navigation = useNavigation();
 
-  const handleLogin = () => {
-    // navigation.navigate('(tabs)', {
-    // });
+  const togglePassword = () => {
+    setShowPassword(!showPassword);
   };
+
+  const handleSignIn = async () => {
+    setError("");
+
+    const status = await signIn(username, password);
+
+    if (status.error) {
+      return setError(status.error);
+    }
+
+    router.replace("/");
+  };
+
+  useEffect(() => {
+    if (!username || !password) return;
+
+    if (username.length >= 6 && password.length >= 6) {
+      setSignInButtonIsDisabled(false);
+      return;
+    }
+
+    setSignInButtonIsDisabled(true);
+  }, [username, password]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setError("");
+    }, 5000);
+
+    return () => clearTimeout(timeout);
+  }, [error]);
 
   return (
     <ScreenFrame>
@@ -42,6 +80,10 @@ export default function Home() {
       </View>
 
       <View style={styles.formContainer}>
+        <View style={{ height: 20 }}>
+          {error && <Info type="alert" message={error} />}
+        </View>
+
         <Input
           placeholder="Nome de usuário"
           value={username}
@@ -51,15 +93,19 @@ export default function Home() {
 
         <Input
           placeholder="Senha"
-          value={username}
-          onChangeText={setUsername}
+          value={password}
+          onChangeText={setPassword}
           icon={KeyIcon}
+          showPassword={showPassword}
+          togglePassword={togglePassword}
+          secureTextEntry={!showPassword}
         />
 
         <Button
-          // icon={GoogleIcon}
-          onPress={handleLogin}
+          onPress={handleSignIn}
           title="Entrar"
+          disabled={signInButtonIsDisabled}
+          loading={loading}
         />
       </View>
 
@@ -77,14 +123,14 @@ export default function Home() {
       </View>
 
       <View style={styles.otherAuthenticationOptions}>
-        <Link href="/register">
+        <Link href="/sign-up">
           <Text style={typography.textSemibold}>
             Não possui uma conta?{" "}
             <Text style={styles.link}>Registre-se aqui</Text>
           </Text>
         </Link>
 
-        <Link href="/(tabs)">
+        <Link href="/sign-up">
           <Text style={typography.textSemibold}>Continuar como convidado</Text>
         </Link>
       </View>
@@ -103,8 +149,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   formContainer: {
-    justifyContent: "center",
-    alignItems: "center",
     gap: 20,
   },
   guestText: {

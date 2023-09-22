@@ -1,5 +1,4 @@
 import { Tabs } from "expo-router";
-import { MaterialIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 
 import { colors } from "@/constants";
@@ -12,9 +11,12 @@ export default function RootTabsLayout() {
   return (
     <>
       <Tabs
-        screenOptions={{ headerShown: false, tabBarShowLabel: false }}
-        sceneContainerStyle={{
-          backgroundColor: colors.light["100"],
+        screenOptions={{
+          headerShown: false,
+          tabBarShowLabel: false,
+          tabBarStyle: {
+            height: 56,
+          },
         }}
       >
         <Tabs.Screen
