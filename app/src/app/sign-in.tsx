@@ -20,7 +20,7 @@ import KeyIcon from "@/assets/svgs/key-icon.svg";
 // import GoogleIcon from "@/assets/svgs/google-icon.svg";
 
 export default function SignIn() {
-  const [username, setUsername] = useState("user02");
+  const [username, setUsername] = useState("user01");
   const [password, setPassword] = useState("121212");
   const [showPassword, setShowPassword] = useState(false);
   const [signInButtonIsDisabled, setSignInButtonIsDisabled] = useState(true);

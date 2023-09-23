@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { useNavigation } from "expo-router";
+import { router, useNavigation } from "expo-router";
 
 import { ScreenFrame } from "@/components/ScreenFrame";
 import { ScreenHeader } from "@/components/ScreenHeader";
@@ -10,17 +10,20 @@ import { LetterButton } from "@/components/LetterButton";
 
 import { colors, typography } from "@/constants";
 import { letters } from "@/utils/letters";
+import { useUser, DrawnWord } from "@/hooks/UserContext";
 import { normalizeWord } from "@/utils/normalizeWords";
 
 import FlagIcon from "@/assets/svgs/flag-icon.svg";
 import LightbulbIcon from "@/assets/svgs/lightbulb-icon.svg";
 
 export default function Game() {
+  const [rawDrawnWord, setRawDrawnWord] = useState<DrawnWord>();
   const [drawnWord, setDrawnWord] = useState<string[]>([]);
   const [ongoingWord, setOngoingWord] = useState<string[]>([]);
   const [mistakesCount, setMistakesCount] = useState(0);
 
   const navigation = useNavigation();
+  const { drawWord } = useUser();
 
   const handleChooseLetter = (letter: string) => {
     if (mistakesCount === 6) return;
@@ -50,8 +53,20 @@ export default function Game() {
   };
 
   useEffect(() => {
-    setDrawnWord("PROGRAMACAO".split(""));
-    setOngoingWord(Array("PROGRAMACAO".length).fill(""));
+    (async () => {
+      const result = await drawWord();
+
+      if (result.error || !result.data) {
+        return router.replace("/(app)/(tabs)");
+      }
+
+      setRawDrawnWord(result.data);
+
+      const normalizedWord = normalizeWord(result.data.word).toUpperCase();
+
+      setDrawnWord(normalizedWord.split(""));
+      setOngoingWord(Array(normalizedWord.length).fill(""));
+    })();
   }, []);
 
   return (
@@ -69,7 +84,7 @@ export default function Game() {
           <View style={styles.tipIconWrapper}>
             <LightbulbIcon width={16} height={16} fill={colors.white} />
           </View>
-          <Text style={styles.tipText}>Tecnologia</Text>
+          <Text style={styles.tipText}>{rawDrawnWord?.tip}</Text>
         </View>
 
         <View style={styles.letterFields}>
