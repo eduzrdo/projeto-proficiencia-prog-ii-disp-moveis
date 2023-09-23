@@ -4,15 +4,67 @@ import { z } from "zod";
 import { prisma } from "../prisma/client";
 import { fastify } from "../../server";
 import console from "console";
+import { calculateScore } from "../utils/calculateScore";
+
+const username = z.string({
+  required_error: "field 'username' is mandatory.",
+  invalid_type_error: "'username' type is invalid. Type must be a STRING.",
+});
 
 const userSchemaFindUser = z.object({
-  username: z.coerce.string(),
+  username,
 });
 
 const userSchemaAuthenticate = z.object({
-  username: z.coerce.string(),
-  password: z.coerce.string(),
+  username,
+  password: z.string().min(6, {
+    message: "field 'password' must have at least 6 characters.",
+  }),
 });
+
+const userSchemaSaveGame = z.object({
+  userId: z.string({
+    required_error: "field 'userId' is mandatory.",
+    invalid_type_error: "'userId' type is invalid. Type must be a STRING.",
+  }),
+  wordId: z.string({
+    required_error: "field 'wordId' is mandatory.",
+    invalid_type_error: "'wordId' type is invalid. Type must be a STRING.",
+  }),
+  gameTime: z
+    .number({
+      required_error: "field 'gameTime' is mandatory.",
+      invalid_type_error:
+        "field 'gameTime' type is invalid. Type must be a NUMBER.",
+    })
+    .int({
+      message: "field 'gameTime' type is invalid. Type must be an INTEGER.",
+    })
+    .positive(),
+  gameResult: z
+    .number({
+      required_error: "field 'gameResult' is mandatory.",
+      invalid_type_error:
+        "'gameResult' type is invalid. Type must be a NUMBER.",
+    })
+    .int({
+      message: "field 'gameTime' type is invalid. Type must be an INTEGER.",
+    })
+    .min(0)
+    .max(1),
+});
+
+const publicUserData = {
+  id: true,
+  username: true,
+  avatar: true,
+  admin: true,
+  wins: true,
+  defeats: true,
+  games: true,
+  score: true,
+  playedWordsIds: true,
+};
 
 export const userController = {
   findUser: async (request: FastifyRequest) => {
@@ -23,15 +75,7 @@ export const userController = {
         where: {
           username,
         },
-        select: {
-          id: true,
-          username: true,
-          avatar: true,
-          admin: true,
-          wins: true,
-          defeats: true,
-          score: true,
-        },
+        select: publicUserData,
       });
       return {
         ok: false,
@@ -49,13 +93,7 @@ export const userController = {
   findAll: async () => {
     try {
       const allUsers = await prisma.user.findMany({
-        select: {
-          id: true,
-          username: true,
-          avatar: true,
-          admin: true,
-          score: true,
-        },
+        select: publicUserData,
       });
       return {
         ok: true,
@@ -83,7 +121,7 @@ export const userController = {
       if (!user) {
         return {
           ok: false,
-          error: `Usuário "${username}" não encontrado.`,
+          error: `Usuário '${username}' não encontrado.`,
         };
       }
 
@@ -103,10 +141,12 @@ export const userController = {
         id: user.id,
         username: user.username,
         avatar: user.avatar,
-        score: user.score,
+        admin: user.admin,
         wins: user.wins,
         defeats: user.defeats,
-        admin: user.admin,
+        games: user.games,
+        score: user.score,
+        playedWordsIds: user.playedWordsIds,
       };
 
       return {
@@ -117,7 +157,8 @@ export const userController = {
       console.log(error);
       return {
         ok: false,
-        error: "Houve um erro ao tentar acessar o jogo. Tente novamente mais tarde.",
+        error:
+          "Houve um erro ao tentar acessar o jogo. Tente novamente mais tarde.",
       };
     }
   },
@@ -135,7 +176,8 @@ export const userController = {
       if (userExists) {
         return {
           ok: false,
-          error: "Esse nome de usuário j́a está sendo usado. Por favor, escolha outro.",
+          error:
+            "Esse nome de usuário j́a está sendo usado. Por favor, escolha outro.",
         };
       }
 
@@ -152,10 +194,12 @@ export const userController = {
         id: user.id,
         username: user.username,
         avatar: user.avatar,
-        score: user.score,
+        admin: user.admin,
         wins: user.wins,
         defeats: user.defeats,
-        admin: user.admin,
+        games: user.games,
+        score: user.score,
+        playedWordsIds: user.playedWordsIds,
       };
 
       return {
@@ -167,6 +211,93 @@ export const userController = {
       return {
         ok: false,
         error: "Houve um erro no cadastro. Tente novamente mais tarde.",
+      };
+    }
+  },
+
+  saveGame: async (request: FastifyRequest) => {
+    try {
+      const { userId, wordId, gameTime, gameResult } = userSchemaSaveGame.parse(
+        request.body
+      );
+
+      const playedWord = await prisma.word.findUniqueOrThrow({
+        where: {
+          id: wordId,
+        },
+      });
+
+      const wordLength = playedWord.word.length;
+
+      let dataResult: {
+        score: {
+          increment: number;
+        };
+        wins?: {
+          increment: 1;
+        };
+        defeats?: {
+          increment: 1;
+        };
+        games: {
+          increment: 1;
+        };
+      } = {
+        score: {
+          increment: calculateScore(wordLength, gameTime),
+        },
+        games: {
+          increment: 1,
+        },
+      };
+
+      if (gameResult === 0) {
+        dataResult.defeats = {
+          increment: 1,
+        };
+      } else {
+        dataResult.wins = {
+          increment: 1,
+        };
+      }
+
+      const updatedUserData = await prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: dataResult,
+        select: publicUserData,
+      });
+
+      return {
+        ok: true,
+        data: {
+          updatedUserData,
+        },
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        ok: false,
+        error: "Houve um erro para salvar o progresso.",
+      };
+    }
+  },
+
+  removeAllUsers: async () => {
+    try {
+      const response = await prisma.user.deleteMany();
+
+      return {
+        ok: true,
+        data: response,
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        ok: false,
+        error:
+          "Error text not defined. See userController.removeAllUsers catch stratement.",
       };
     }
   },
