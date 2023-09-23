@@ -25,7 +25,7 @@ export const PlayerCard = ({
   const imageSource = avatarUrl ? { uri: avatarUrl } : profilePicture;
 
   return (
-    <Link href={`/profile/${playerId}`} asChild>
+    <Link href={`/(app)/(profile)/${playerId}`} asChild>
       <TouchableNativeFeedback>
         <View
           style={{

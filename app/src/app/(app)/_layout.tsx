@@ -1,4 +1,4 @@
-import { Redirect, Stack } from "expo-router";
+import { Redirect, Slot, Stack } from "expo-router";
 
 import { useUser } from "@/hooks/UserContext";
 
@@ -8,6 +8,8 @@ export default function AppLayout() {
   if (!user) {
     return <Redirect href="/sign-in" />;
   }
+
+  // return <Slot />;
 
   return (
     <Stack

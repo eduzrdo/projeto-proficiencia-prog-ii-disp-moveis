@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, Pressable } from "react-native";
 import { SvgProps } from "react-native-svg";
-import { useLocalSearchParams } from "expo-router";
+import { Link, useLocalSearchParams } from "expo-router";
 
 import { ScreenFrame } from "@/components/ScreenFrame";
 import { ScreenHeader } from "@/components/ScreenHeader";
@@ -9,8 +9,9 @@ import { Avatar } from "@/components/Avatar";
 import { Loading } from "@/components/Loading";
 
 import { colors, typography } from "@/constants";
-import { User } from "@/hooks/UserContext";
+import { User, useUser } from "@/hooks/UserContext";
 import { formatScore } from "@/utils/formatScore";
+import { api } from "@/utils/axios";
 
 import TrophySmallIcon from "@/assets/svgs/trophy-small-icon.svg";
 import GradeIcon from "@/assets/svgs/grade-icon.svg";
@@ -18,14 +19,17 @@ import CalendarIcon from "@/assets/svgs/calendar-icon.svg";
 import WinIcon from "@/assets/svgs/win-icon.svg";
 import DefeatIcon from "@/assets/svgs/defeat-icon.svg";
 import PercentageIcon from "@/assets/svgs/percent-icon.svg";
+import UnplugIcon from "@/assets/svgs/unplug-icon.svg";
+
+import SettingsIcon from "@/assets/svgs/settings-icon.svg";
 
 import profilePicture from "@/assets/images/profile-picture-placeholder.png";
-import { api } from "@/utils/axios";
 
 export default function Profile() {
   const [playerData, setPlayerData] = useState<User>();
 
   const { playerId } = useLocalSearchParams<{ playerId: string }>();
+  const { signOut } = useUser();
 
   useEffect(() => {
     (async () => {
@@ -41,12 +45,18 @@ export default function Profile() {
 
   return (
     <ScreenFrame>
-      <ScreenHeader title={`Perfil de ${playerData.username}`} />
+      <View style={styles.header}>
+        <ScreenHeader title={`Perfil de ${playerData.username}`} />
+
+        <Link href="/(app)/(profile)/modal" asChild>
+          <Pressable onPress={signOut} hitSlop={20}>
+            <UnplugIcon width={24} height={24} stroke={colors.light["800"]} />
+          </Pressable>
+        </Link>
+      </View>
 
       <View style={styles.avatarWrapper}>
         <Avatar source={playerData.avatar ?? profilePicture} size="big" />
-
-        {/* <Text style={typography.smallText}>{playerId}</Text> */}
       </View>
 
       <View style={styles.playerDataContainer}>
@@ -90,6 +100,11 @@ function Stat({ icon: Icon, value }: StatProps) {
 }
 
 const styles = StyleSheet.create({
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   avatarWrapper: {
     alignItems: "center",
   },

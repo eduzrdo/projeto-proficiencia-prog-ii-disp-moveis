@@ -12,6 +12,7 @@ import { Loading } from "@/components/Loading";
 import { colors, sizes, typography } from "@/constants";
 import { User, useUser } from "@/hooks/UserContext";
 import { api } from "@/utils/axios";
+import { formatScore } from "@/utils/formatScore";
 
 import TrophyIcon from "@/assets/svgs/trophy-icon.svg";
 import GamepadIcon from "@/assets/svgs/gamepad-icon.svg";
@@ -35,9 +36,9 @@ export default function Home() {
   return (
     <ScreenFrame>
       <View style={styles.welcomeContainer}>
-        <Title>Bom dia, Eduardo!</Title>
+        <Title>Olá, {user.username}!</Title>
 
-        <Link href={`/profile/${user.id}`} asChild>
+        <Link href={`/(app)/(profile)/${user.id}`} asChild>
           <Pressable>
             <Avatar
               source={
@@ -56,7 +57,9 @@ export default function Home() {
         <View style={styles.userScoreContainer}>
           <View style={styles.userScore}>
             <Text style={styles.scoreTitle}>Sua pontuação</Text>
-            <Text style={typography.textSemibold}>153.902 pontos</Text>
+            <Text style={typography.subtitle}>
+              {formatScore(user.score)} pontos
+            </Text>
           </View>
 
           <View
@@ -91,7 +94,11 @@ export default function Home() {
         <View style={styles.playButtonWrapper}>
           <Link href="/game" asChild>
             <Pressable style={styles.playButton}>
-              <GamepadIcon width={32} height={32} fill={colors.light["800"]} />
+              <GamepadIcon
+                width={32}
+                height={32}
+                stroke={colors.light["800"]}
+              />
               <Text style={styles.playButtonText}>JOGAR</Text>
             </Pressable>
           </Link>
@@ -129,7 +136,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   scoreTitle: {
-    ...typography.text,
+    ...typography.smallText,
     color: colors.light["600"],
   },
   trophyWrapper: {

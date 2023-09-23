@@ -16,7 +16,13 @@ export const ScreenHeader = ({ title, hideBackButton }: ScreenHeaderProps) => {
   const navigation = useNavigation();
 
   return (
-    <View style={{ flexDirection: "row", alignItems: "center", gap: 16 }}>
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 16,
+      }}
+    >
       {!hideBackButton && (
         <Pressable onPress={navigation.goBack} hitSlop={20}>
           <ArrowLeftIcon width={24} height={24} fill={colors.light["800"]} />
