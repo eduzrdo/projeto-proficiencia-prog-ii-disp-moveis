@@ -1,3 +1,3 @@
-export function calculateScore(wordLength: number, gameTime: number) {
-  return wordLength * 16 - gameTime;
+export function calculateScore(wordLength: number, gameDuration: number) {
+  return wordLength * 16 - gameDuration;
 }

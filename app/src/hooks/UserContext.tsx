@@ -2,7 +2,7 @@ import React, { createContext, ReactNode, useContext, useState } from "react";
 
 import { api } from "@/utils/axios";
 
-interface User {
+export interface User {
   id: string;
   username: string;
   avatar: string | null;
@@ -39,6 +39,11 @@ interface UserContextData {
   ) => Promise<{ ok: boolean; error?: string }>;
   signOut: () => void;
   drawWord: () => Promise<{ ok: boolean; data?: DrawnWord; error?: string }>;
+  saveGame: (
+    wordId: string,
+    gameDuration: number,
+    gameResult: 0 | 1
+  ) => Promise<{ ok: boolean; error?: string }>;
   loading: boolean;
 }
 
@@ -49,11 +54,17 @@ interface UserContextProviderProps {
 }
 
 type AuthenticationResponse = ServerBaseResponse & {
-  data?: User;
+  data: User;
 };
 
 type DrawWordResponse = ServerBaseResponse & {
   data: DrawnWord;
+};
+
+type SaveGameResponse = ServerBaseResponse & {
+  data: {
+    updatedUserData: User;
+  };
 };
 
 export const UserContextProvider = ({ children }: UserContextProviderProps) => {
@@ -76,10 +87,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
       };
     }
 
-    if (response.data.data) {
-      setUser(response.data.data);
-    }
-
+    setUser(response.data.data);
     setLoading(false);
     return {
       ok: true,
@@ -102,10 +110,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
       };
     }
 
-    if (response.data.data) {
-      setUser(response.data.data);
-    }
-
+    setUser(response.data.data);
     setLoading(false);
     return {
       ok: true,
@@ -138,6 +143,33 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
     };
   };
 
+  const saveGame = async (
+    wordId: string,
+    gameDuration: number,
+    gameResult: 0 | 1
+  ) => {
+    const response = await api.post<SaveGameResponse>("/user/save-game", {
+      userId: user?.id,
+      wordId,
+      gameDuration,
+      gameResult,
+    });
+
+    if (response.data.error) {
+      setLoading(false);
+      return {
+        ok: false,
+        error: response.data.error,
+      };
+    }
+
+    setUser(response.data.data.updatedUserData);
+    setLoading(false);
+    return {
+      ok: true,
+    };
+  };
+
   return (
     <UserContext.Provider
       value={{
@@ -146,6 +178,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
         signIn,
         signOut,
         drawWord,
+        saveGame,
         loading,
       }}
     >

@@ -5,6 +5,7 @@ import { prisma } from "../prisma/client";
 import { fastify } from "../../server";
 
 import { wordlist } from "../utils/wordlist";
+import { normalizeWord } from "../utils/normalizeWord";
 
 const wordSchemaDraw = z.object({
   userId: z.string({
@@ -34,6 +35,7 @@ export const wordController = {
   draw: async (request: FastifyRequest) => {
     try {
       const { userId } = wordSchemaDraw.parse(request.body);
+
 
       const user = await prisma.user.findUniqueOrThrow({
         where: {
@@ -85,8 +87,15 @@ export const wordController = {
 
   seedDatabase: async () => {
     try {
+      const normalizedWordList = wordlist.map(item => {
+        return {
+          ...item,
+          normalizedWord: normalizeWord(item.word),
+        }
+      })
+
       const addedWords = await prisma.word.createMany({
-        data: wordlist,
+        data: normalizedWordList,
       });
 
       return {

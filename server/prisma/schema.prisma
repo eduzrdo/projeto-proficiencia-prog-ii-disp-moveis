@@ -25,9 +25,10 @@ model User {
 }
 
 model Word {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  word     String @unique
-  tip      String
-  language String @default("pt-br")
+  id             String @id @default(auto()) @map("_id") @db.ObjectId
+  word           String @unique
+  normalizedWord String
+  tip            String
+  language       String @default("pt-br")
   // difficulty Int
 }

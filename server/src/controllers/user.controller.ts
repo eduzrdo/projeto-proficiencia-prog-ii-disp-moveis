@@ -5,14 +5,23 @@ import { prisma } from "../prisma/client";
 import { fastify } from "../../server";
 import console from "console";
 import { calculateScore } from "../utils/calculateScore";
+import { Prisma } from "@prisma/client";
 
-const username = z.string({
-  required_error: "field 'username' is mandatory.",
-  invalid_type_error: "'username' type is invalid. Type must be a STRING.",
+const username = z
+  .string({
+    required_error: "field 'username' is mandatory.",
+    invalid_type_error: "'username' type is invalid. Type must be a STRING.",
+  })
+  .min(6, {
+    message: "'username' must have at least 6 characters.",
+  });
+
+const userSchemaFindAll = z.object({
+  amount: z.coerce.number().int().min(1).optional(),
 });
 
 const userSchemaFindUser = z.object({
-  username,
+  id: z.string(),
 });
 
 const userSchemaAuthenticate = z.object({
@@ -31,14 +40,14 @@ const userSchemaSaveGame = z.object({
     required_error: "field 'wordId' is mandatory.",
     invalid_type_error: "'wordId' type is invalid. Type must be a STRING.",
   }),
-  gameTime: z
+  gameDuration: z
     .number({
-      required_error: "field 'gameTime' is mandatory.",
+      required_error: "field 'gameDuration' is mandatory.",
       invalid_type_error:
-        "field 'gameTime' type is invalid. Type must be a NUMBER.",
+        "field 'gameDuration' type is invalid. Type must be a NUMBER.",
     })
     .int({
-      message: "field 'gameTime' type is invalid. Type must be an INTEGER.",
+      message: "field 'gameDuration' type is invalid. Type must be an INTEGER.",
     })
     .positive(),
   gameResult: z
@@ -48,7 +57,7 @@ const userSchemaSaveGame = z.object({
         "'gameResult' type is invalid. Type must be a NUMBER.",
     })
     .int({
-      message: "field 'gameTime' type is invalid. Type must be an INTEGER.",
+      message: "field 'gameDuration' type is invalid. Type must be an INTEGER.",
     })
     .min(0)
     .max(1),
@@ -69,11 +78,11 @@ const publicUserData = {
 export const userController = {
   findUser: async (request: FastifyRequest) => {
     try {
-      const { username } = userSchemaFindUser.parse(request.params);
+      const { id } = userSchemaFindUser.parse(request.params);
 
       const user = await prisma.user.findUniqueOrThrow({
         where: {
-          username,
+          id,
         },
         select: publicUserData,
       });
@@ -90,10 +99,27 @@ export const userController = {
     }
   },
 
-  findAll: async () => {
+  findAll: async (request: FastifyRequest) => {
     try {
+      const { amount } = userSchemaFindAll.parse(request.query);
+
+      let options: {
+        take?: number;
+        orderBy: { score: "asc" | "desc" };
+      } = {
+        orderBy: {
+          score: "desc",
+        },
+      };
+
+      if (amount) {
+        options.take = amount;
+        options.orderBy.score = "desc";
+      }
+
       const allUsers = await prisma.user.findMany({
         select: publicUserData,
+        ...options,
       });
       return {
         ok: true,
@@ -217,9 +243,8 @@ export const userController = {
 
   saveGame: async (request: FastifyRequest) => {
     try {
-      const { userId, wordId, gameTime, gameResult } = userSchemaSaveGame.parse(
-        request.body
-      );
+      const { userId, wordId, gameDuration, gameResult } =
+        userSchemaSaveGame.parse(request.body);
 
       const playedWord = await prisma.word.findUniqueOrThrow({
         where: {
@@ -230,7 +255,7 @@ export const userController = {
       const wordLength = playedWord.word.length;
 
       let dataResult: {
-        score: {
+        score?: {
           increment: number;
         };
         wins?: {
@@ -243,9 +268,6 @@ export const userController = {
           increment: 1;
         };
       } = {
-        score: {
-          increment: calculateScore(wordLength, gameTime),
-        },
         games: {
           increment: 1,
         },
@@ -258,6 +280,9 @@ export const userController = {
       } else {
         dataResult.wins = {
           increment: 1,
+        };
+        dataResult.score = {
+          increment: calculateScore(wordLength, gameDuration),
         };
       }
 

@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
 import { View, Text, Dimensions, StyleSheet, Alert } from "react-native";
-import {
-  Link,
-  router,
-  // useNavigation
-} from "expo-router";
+import { Link, router } from "expo-router";
 
 import { ScreenFrame } from "@/components/ScreenFrame";
 import { Button } from "@/components/Button";
@@ -31,8 +27,6 @@ export default function SignIn() {
   const screenWidth = Dimensions.get("screen").width;
   const logotypeScaleFactor = screenWidth / 103.76;
   const logotypeHeight = 43.86 * logotypeScaleFactor;
-
-  // const navigation = useNavigation();
 
   const togglePassword = () => {
     setShowPassword(!showPassword);
@@ -130,9 +124,9 @@ export default function SignIn() {
           </Text>
         </Link>
 
-        <Link href="/sign-up">
+        {/* <Link href="/sign-up">
           <Text style={typography.textSemibold}>Continuar como convidado</Text>
-        </Link>
+        </Link> */}
       </View>
     </ScreenFrame>
   );

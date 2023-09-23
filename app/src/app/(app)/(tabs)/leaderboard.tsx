@@ -1,45 +1,32 @@
-import { useState } from "react";
-import { TextInput, View, FlatList, StyleSheet } from "react-native";
-// import { Link } from "expo-router";
+import { useEffect, useState } from "react";
+import { View, FlatList, StyleSheet } from "react-native";
 
 import { ScreenFrame } from "@/components/ScreenFrame";
 import { ScreenHeader } from "@/components/ScreenHeader";
 import { PlayerCard } from "@/components/PlayerCard";
 import { Input } from "@/components/Input";
-// import { Button } from "@/components/Button";
 
+import { User } from "@/hooks/UserContext";
 import { colors, sizes, typography } from "@/constants";
+import { api } from "@/utils/axios";
 
 import MagnifyingGlassIcon from "@/assets/svgs/magnifying-glass-icon.svg";
 
-type PlayerData = {
-  id: number;
-  playerName: string;
-  rank: number;
-  avatarUrl: string;
-  score: number;
-};
-
-const player: PlayerData = {
-  id: 1,
-  playerName: "@username",
-  rank: 1,
-  avatarUrl: "https://avatars.githubusercontent.com/u/43072438?v=4",
-  score: 153902,
-};
-
-const playerList: PlayerData[] = Array(10)
-  .fill(player)
-  .map((player, index) => {
-    return {
-      ...player,
-      id: player.id + index,
-      rank: player.rank + index,
-    };
-  });
-
 export default function Leaderboard() {
+  const [topPlayers, setTopPlayers] = useState<User[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredPlayers = topPlayers.filter((player) =>
+    player.username.toLowerCase().includes(searchQuery.trim().toLowerCase())
+  );
+
+  useEffect(() => {
+    (async () => {
+      const top3playersResponse = await api.get("/user?amount=100");
+
+      setTopPlayers(top3playersResponse.data.data);
+    })();
+  }, []);
 
   return (
     <ScreenFrame>
@@ -54,18 +41,18 @@ export default function Leaderboard() {
 
       <View style={styles.flatListContainer}>
         <FlatList
-          data={playerList}
-          renderItem={({ item, index }) => (
+          data={filteredPlayers}
+          renderItem={({ item }) => (
             <PlayerCard
-              key={index}
-              playerId={`ID do jogador: ${String(item.id)}`}
-              rank={item.rank}
-              avatarUrl={item.avatarUrl}
-              playerName={item.playerName}
+              // key={item.id}
+              playerId={item.id}
+              // rank={item.rank}
+              avatarUrl={item.avatar}
+              playerUsername={item.username}
               score={item.score}
             />
           )}
-          keyExtractor={(item) => String(item.id)}
+          keyExtractor={(player) => String(player.id)}
           contentContainerStyle={styles.flatListContent}
           showsVerticalScrollIndicator={false}
         />

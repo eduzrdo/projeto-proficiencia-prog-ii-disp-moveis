@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { router, useNavigation } from "expo-router";
+import { router } from "expo-router";
 
 import { ScreenFrame } from "@/components/ScreenFrame";
 import { ScreenHeader } from "@/components/ScreenHeader";
@@ -22,24 +22,39 @@ export default function Game() {
 
   const [hitsCount, setHitsCount] = useState(0);
   const [mistakesCount, setMistakesCount] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
 
-  const navigation = useNavigation();
-  const { drawWord } = useUser();
-
-  console.log("RENER GAME SCREEN");
+  const { drawWord, saveGame } = useUser();
 
   useEffect(() => {
     (async () => {
       const result = await drawWord();
 
       if (result.error || !result.data) {
-        return router.replace("/(app)/(tabs)");
+        return router.back();
       }
 
       setDrawnWord(result.data);
       setOngoingWord(Array(result.data.word.length).fill(""));
     })();
   }, []);
+
+  useEffect(() => {
+    if (!gameOver || !drawnWord) return;
+
+    (async () => {
+      const gameResult = mistakesCount < 6 ? 1 : 0;
+      await saveGame(drawnWord.id, 10, gameResult);
+
+      router.back();
+    })();
+  }, [gameOver]);
+
+  useEffect(() => {
+    if (hitsCount === drawnWord?.word.length || mistakesCount === 6) {
+      setGameOver(true);
+    }
+  }, [hitsCount, mistakesCount]);
 
   if (!drawnWord) {
     return (
@@ -49,8 +64,6 @@ export default function Game() {
       </ScreenFrame>
     );
   }
-
-  const gameOver = hitsCount === drawnWord.word.length || mistakesCount === 6;
 
   const handleChooseLetter = (letter: string) => {
     if (mistakesCount === 6) return;
@@ -87,7 +100,7 @@ export default function Game() {
       <View style={styles.header}>
         <ScreenHeader hideBackButton title="Descubra a palavra" />
 
-        <Pressable onPress={navigation.goBack} hitSlop={20}>
+        <Pressable onPress={router.back} hitSlop={20}>
           <FlagIcon fill={colors.light["800"]} />
         </Pressable>
       </View>

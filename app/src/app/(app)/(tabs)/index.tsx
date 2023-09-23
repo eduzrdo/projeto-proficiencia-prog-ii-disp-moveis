@@ -1,11 +1,5 @@
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  Pressable,
-  ActivityIndicator,
-} from "react-native";
+import { useEffect, useState } from "react";
+import { Text, View, StyleSheet, Pressable } from "react-native";
 import { Link } from "expo-router";
 
 import { ScreenFrame } from "@/components/ScreenFrame";
@@ -13,20 +7,30 @@ import { ThickShadow } from "@/components/ThickShadow";
 import { Title } from "@/components/Title";
 import { Avatar } from "@/components/Avatar";
 import { PlayerCard } from "@/components/PlayerCard";
+import { Loading } from "@/components/Loading";
 
 import { colors, sizes, typography } from "@/constants";
+import { User, useUser } from "@/hooks/UserContext";
+import { api } from "@/utils/axios";
 
 import TrophyIcon from "@/assets/svgs/trophy-icon.svg";
 import GamepadIcon from "@/assets/svgs/gamepad-icon.svg";
-
 import profilePicture from "@/assets/images/profile-picture-placeholder.png";
-import { useUser } from "@/hooks/UserContext";
-import { Loading } from "@/components/Loading";
 
 export default function Home() {
+  const [top3players, setTop3players] = useState<User[]>([]);
+
   const { user } = useUser();
 
   if (!user) return <Loading stretch />;
+
+  useEffect(() => {
+    (async () => {
+      const top3playersResponse = await api.get("/user?amount=3");
+
+      setTop3players(top3playersResponse.data.data);
+    })();
+  }, []);
 
   return (
     <ScreenFrame>
@@ -71,29 +75,16 @@ export default function Home() {
       <View style={styles.bestPlayersContainer}>
         <Text style={typography.subtitle}>Melhores Jogadores</Text>
 
-        {Array(3)
-          .fill({
-            id: 1,
-            rank: 1,
-            avatarUrl: "https://avatars.githubusercontent.com/u/43072438?v=4",
-            score: 153902,
-          })
-          .map((player, index) => {
-            return {
-              ...player,
-              id: player.id + index,
-              rank: player.rank + index,
-            };
-          })
-          .map((player, index) => (
-            <PlayerCard
-              key={index}
-              playerId={player.id}
-              rank={player.rank}
-              avatarUrl={player.avatarUrl}
-              score={player.score}
-            />
-          ))}
+        {top3players.map((player, index) => (
+          <PlayerCard
+            key={player.id}
+            playerId={player.id}
+            rank={index + 1}
+            playerUsername={player.username}
+            avatarUrl={player.avatar}
+            score={player.score}
+          />
+        ))}
       </View>
 
       <View style={styles.playButtonContainer}>
