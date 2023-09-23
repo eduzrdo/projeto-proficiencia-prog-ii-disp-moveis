@@ -7,50 +7,26 @@ import { ScreenHeader } from "@/components/ScreenHeader";
 import { Letter } from "@/components/Letter";
 import { Face } from "@/components/Face";
 import { LetterButton } from "@/components/LetterButton";
+import { Loading } from "@/components/Loading";
 
 import { colors, typography } from "@/constants";
 import { letters } from "@/utils/letters";
 import { useUser, DrawnWord } from "@/hooks/UserContext";
-import { normalizeWord } from "@/utils/normalizeWords";
 
 import FlagIcon from "@/assets/svgs/flag-icon.svg";
 import LightbulbIcon from "@/assets/svgs/lightbulb-icon.svg";
 
 export default function Game() {
-  const [rawDrawnWord, setRawDrawnWord] = useState<DrawnWord>();
-  const [drawnWord, setDrawnWord] = useState<string[]>([]);
+  const [drawnWord, setDrawnWord] = useState<DrawnWord>();
   const [ongoingWord, setOngoingWord] = useState<string[]>([]);
+
+  const [hitsCount, setHitsCount] = useState(0);
   const [mistakesCount, setMistakesCount] = useState(0);
 
   const navigation = useNavigation();
   const { drawWord } = useUser();
 
-  const handleChooseLetter = (letter: string) => {
-    if (mistakesCount === 6) return;
-
-    const foundIndexes = drawnWord.reduce(
-      (indexes: number[], element: string, index: number) => {
-        if (letter === element) {
-          indexes.push(index);
-        }
-        return indexes;
-      },
-      []
-    );
-
-    if (foundIndexes.length === 0) {
-      setMistakesCount((previousCount) => previousCount + 1);
-      return;
-    }
-
-    const newOngoingWord: string[] = [...ongoingWord];
-
-    for (const index of foundIndexes) {
-      newOngoingWord.splice(index, 1, letter);
-    }
-
-    setOngoingWord(newOngoingWord);
-  };
+  console.log("RENER GAME SCREEN");
 
   useEffect(() => {
     (async () => {
@@ -60,14 +36,51 @@ export default function Game() {
         return router.replace("/(app)/(tabs)");
       }
 
-      setRawDrawnWord(result.data);
-
-      const normalizedWord = normalizeWord(result.data.word).toUpperCase();
-
-      setDrawnWord(normalizedWord.split(""));
-      setOngoingWord(Array(normalizedWord.length).fill(""));
+      setDrawnWord(result.data);
+      setOngoingWord(Array(result.data.word.length).fill(""));
     })();
   }, []);
+
+  if (!drawnWord) {
+    return (
+      <ScreenFrame center>
+        <Text style={typography.title}>Sorteando palavra...</Text>
+        <Loading />
+      </ScreenFrame>
+    );
+  }
+
+  const gameOver = hitsCount === drawnWord.word.length || mistakesCount === 6;
+
+  const handleChooseLetter = (letter: string) => {
+    if (mistakesCount === 6) return;
+
+    const foundIndexes = drawnWord.normalizedWord
+      .split("")
+      .reduce((indexes: number[], element: string, index: number) => {
+        if (letter === element) {
+          indexes.push(index);
+        }
+        return indexes;
+      }, []);
+
+    if (foundIndexes.length === 0) {
+      setMistakesCount((previousCount) => previousCount + 1);
+      return;
+    }
+
+    setHitsCount(
+      (previousHitsCount) => previousHitsCount + foundIndexes.length
+    );
+
+    const newOngoingWord: string[] = [...ongoingWord];
+
+    for (const index of foundIndexes) {
+      newOngoingWord.splice(index, 1, letter);
+    }
+
+    setOngoingWord(newOngoingWord);
+  };
 
   return (
     <ScreenFrame>
@@ -84,7 +97,7 @@ export default function Game() {
           <View style={styles.tipIconWrapper}>
             <LightbulbIcon width={16} height={16} fill={colors.white} />
           </View>
-          <Text style={styles.tipText}>{rawDrawnWord?.tip}</Text>
+          <Text style={styles.tipText}>{drawnWord.tip}</Text>
         </View>
 
         <View style={styles.letterFields}>
@@ -104,8 +117,10 @@ export default function Game() {
             key={letter}
             onPress={() => handleChooseLetter(letter)}
             letter={letter}
-            colorFeedback={drawnWord.includes(letter) ? "correct" : "wrong"}
-            disable={mistakesCount === 6}
+            colorFeedback={
+              drawnWord.normalizedWord.includes(letter) ? "correct" : "wrong"
+            }
+            disable={gameOver}
           />
         ))}
       </View>

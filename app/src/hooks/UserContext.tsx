@@ -17,6 +17,7 @@ interface User {
 export interface DrawnWord {
   id: string;
   word: string;
+  normalizedWord: string;
   tip: string;
   language: string;
 }
