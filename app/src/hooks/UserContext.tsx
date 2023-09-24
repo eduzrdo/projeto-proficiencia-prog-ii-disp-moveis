@@ -12,6 +12,7 @@ export interface User {
   games: number;
   admin: boolean;
   playedWordsIds: string[];
+  createdAt: string;
 }
 
 export interface DrawnWord {
@@ -22,28 +23,27 @@ export interface DrawnWord {
   language: string;
 }
 
-interface ServerBaseResponse {
+// RESPONSE FOR CLIENT ACTIONS THAT DON'T RETURN ANYTHING BUT BASE RESPONSE
+// RETURNED DATA ARE USED WITHIN CONTEXT ONLY
+type ServerBaseResponse = {
   ok: boolean;
   error?: string;
-}
+};
 
 interface UserContextData {
   user: User | null;
-  signUp: (
-    username: string,
-    password: string
-  ) => Promise<{ ok: boolean; error?: string }>;
-  signIn: (
-    username: string,
-    password: string
-  ) => Promise<{ ok: boolean; error?: string }>;
+  signUp: (username: string, password: string) => Promise<ServerBaseResponse>;
+  signIn: (username: string, password: string) => Promise<ServerBaseResponse>;
   signOut: () => void;
   drawWord: () => Promise<{ ok: boolean; data?: DrawnWord; error?: string }>;
   saveGame: (
     wordId: string,
     gameDuration: number,
     gameResult: 0 | 1
-  ) => Promise<{ ok: boolean; error?: string }>;
+  ) => Promise<ServerBaseResponse>;
+  clearUserData: (
+    targetUserId: string
+  ) => Promise<{ ok: boolean; data?: User; error?: string }>;
   loading: boolean;
 }
 
@@ -61,11 +61,8 @@ type DrawWordResponse = ServerBaseResponse & {
   data: DrawnWord;
 };
 
-type SaveGameResponse = ServerBaseResponse & {
-  data: {
-    updatedUserData: User;
-  };
-};
+type SaveGameResponse = AuthenticationResponse;
+type ClearUserDataResponse = AuthenticationResponse;
 
 export const UserContextProvider = ({ children }: UserContextProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
@@ -74,7 +71,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
   const signUp = async (username: string, password: string) => {
     setLoading(true);
 
-    const response = await api.post<AuthenticationResponse>("/user/signup", {
+    const response = await api.post<AuthenticationResponse>("/user/sign-up", {
       username,
       password,
     });
@@ -97,7 +94,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
   const signIn = async (username: string, password: string) => {
     setLoading(true);
 
-    const response = await api.post<AuthenticationResponse>("/user/signin", {
+    const response = await api.post<AuthenticationResponse>("/user/sign-in", {
       username,
       password,
     });
@@ -163,10 +160,36 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
       };
     }
 
-    setUser(response.data.data.updatedUserData);
+    setUser(response.data.data);
     setLoading(false);
     return {
       ok: true,
+    };
+  };
+
+  const clearUserData = async (targetUserId: string) => {
+    const response = await api.post<ClearUserDataResponse>(
+      "/user/clear-user-data",
+      {
+        adminId: user?.id,
+        targetUserId,
+      }
+    );
+
+    if (response.data.error) {
+      return {
+        ok: false,
+        error: response.data.error,
+      };
+    }
+
+    if (response.data.data.id === user?.id) {
+      setUser(response.data.data);
+    }
+
+    return {
+      ok: true,
+      data: response.data.data,
     };
   };
 
@@ -179,6 +202,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
         signOut,
         drawWord,
         saveGame,
+        clearUserData,
         loading,
       }}
     >

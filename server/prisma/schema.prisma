@@ -22,6 +22,7 @@ model User {
   games          Int      @default(0)
   admin          Boolean  @default(false)
   playedWordsIds String[] @db.ObjectId
+  createdAt      DateTime @default(now())
 }
 
 model Word {

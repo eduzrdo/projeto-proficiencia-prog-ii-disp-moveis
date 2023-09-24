@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { router } from "expo-router";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 import { Input } from "@/components/Input";
 import { ScreenFrame } from "@/components/ScreenFrame";
@@ -40,6 +40,14 @@ export default function SignUp() {
     router.replace("/");
   };
 
+  const handleChangeUsernameLogin = (text: string) => {
+    if (error !== "") {
+      setError("");
+    }
+
+    setUsername(text);
+  };
+
   useEffect(() => {
     if (!username || !password) return;
 
@@ -51,14 +59,6 @@ export default function SignUp() {
     setRegisterButtonIsDisabled(true);
   }, [username, password]);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setError("");
-    }, 5000);
-
-    return () => clearTimeout(timeout);
-  }, [error]);
-
   return (
     <ScreenFrame>
       <ScreenHeader title="Registrar" />
@@ -67,7 +67,7 @@ export default function SignUp() {
         <Input
           placeholder="Nome de usuário"
           value={username}
-          onChangeText={setUsername}
+          onChangeText={handleChangeUsernameLogin}
           icon={AtSignIcon}
           autoFocus
         />

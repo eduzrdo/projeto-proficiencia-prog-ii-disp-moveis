@@ -1,6 +1,5 @@
 import { useCallback } from "react";
 import { Stack } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 import * as SplashScreen from "expo-splash-screen";
 import {
   useFonts,
@@ -9,6 +8,7 @@ import {
 } from "@expo-google-fonts/inter";
 
 import { UserContextProvider } from "@/hooks/UserContext";
+import { StatusBar } from "expo-status-bar";
 
 SplashScreen.preventAutoHideAsync();
 

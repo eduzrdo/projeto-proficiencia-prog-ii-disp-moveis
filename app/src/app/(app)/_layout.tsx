@@ -9,14 +9,14 @@ export default function AppLayout() {
     return <Redirect href="/sign-in" />;
   }
 
-  // return <Slot />;
-
   return (
     <Stack
       screenOptions={{
         headerShown: false,
       }}
     >
+      <Stack.Screen name="(tabs)" />
+
       <Stack.Screen
         name="(profile)"
         options={{

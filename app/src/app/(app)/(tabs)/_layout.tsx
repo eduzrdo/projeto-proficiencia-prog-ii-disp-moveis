@@ -9,44 +9,40 @@ import MedalIcon from "@/assets/svgs/medal-icon.svg";
 
 export default function RootTabsLayout() {
   return (
-    <>
-      <Tabs
-        screenOptions={{
-          headerShown: false,
-          tabBarShowLabel: false,
-          tabBarStyle: {
-            height: 56,
-          },
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          height: 56,
+        },
+      }}
+    >
+      <Tabs.Screen
+        name="index"
+        options={{
+          tabBarIcon: ({ size, focused }) => (
+            <HomeIcon
+              width={size}
+              height={size}
+              fill={focused ? colors.primary[700] : colors.light[300]}
+            />
+          ),
         }}
-      >
-        <Tabs.Screen
-          name="home"
-          options={{
-            tabBarIcon: ({ size, focused }) => (
-              <HomeIcon
-                width={size}
-                height={size}
-                fill={focused ? colors.primary[700] : colors.light[300]}
-              />
-            ),
-          }}
-        />
+      />
 
-        <Tabs.Screen
-          name="leaderboard"
-          options={{
-            tabBarIcon: ({ size, focused }) => (
-              <MedalIcon
-                width={size}
-                height={size}
-                fill={focused ? colors.primary[700] : colors.light[300]}
-              />
-            ),
-          }}
-        />
-      </Tabs>
-
-      <StatusBar backgroundColor="transparent" translucent />
-    </>
+      <Tabs.Screen
+        name="leaderboard"
+        options={{
+          tabBarIcon: ({ size, focused }) => (
+            <MedalIcon
+              width={size}
+              height={size}
+              fill={focused ? colors.primary[700] : colors.light[300]}
+            />
+          ),
+        }}
+      />
+    </Tabs>
   );
 }

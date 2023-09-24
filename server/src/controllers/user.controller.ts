@@ -3,7 +3,6 @@ import { z } from "zod";
 
 import { prisma } from "../prisma/client";
 import { fastify } from "../../server";
-import console from "console";
 import { calculateScore } from "../utils/calculateScore";
 import { Prisma } from "@prisma/client";
 
@@ -29,6 +28,11 @@ const userSchemaAuthenticate = z.object({
   password: z.string().min(6, {
     message: "field 'password' must have at least 6 characters.",
   }),
+});
+
+const userSchemaClearUserData = z.object({
+  adminId: z.string(),
+  targetUserId: z.string(),
 });
 
 const userSchemaSaveGame = z.object({
@@ -73,6 +77,7 @@ const publicUserData = {
   games: true,
   score: true,
   playedWordsIds: true,
+  createdAt: true,
 };
 
 export const userController = {
@@ -173,6 +178,7 @@ export const userController = {
         games: user.games,
         score: user.score,
         playedWordsIds: user.playedWordsIds,
+        createdAt: user.createdAt,
       };
 
       return {
@@ -226,6 +232,7 @@ export const userController = {
         games: user.games,
         score: user.score,
         playedWordsIds: user.playedWordsIds,
+        createdAt: user.createdAt,
       };
 
       return {
@@ -296,9 +303,7 @@ export const userController = {
 
       return {
         ok: true,
-        data: {
-          updatedUserData,
-        },
+        data: updatedUserData,
       };
     } catch (error) {
       console.log(error);
@@ -321,8 +326,53 @@ export const userController = {
       console.log(error);
       return {
         ok: false,
-        error:
-          "Error text not defined. See userController.removeAllUsers catch stratement.",
+        error: "Error while trying to delete all users.",
+      };
+    }
+  },
+
+  clearUserData: async (request: FastifyRequest) => {
+    try {
+      const { adminId, targetUserId } = userSchemaClearUserData.parse(
+        request.body
+      );
+
+      const admin = await prisma.user.findUniqueOrThrow({
+        where: {
+          id: adminId,
+        },
+      });
+
+      if (!admin.admin) {
+        return {
+          ok: false,
+          error: "Você não possui permissões para executar essa ação.",
+        };
+      }
+
+      const updatedUser = await prisma.user.update({
+        where: {
+          id: targetUserId,
+        },
+        data: {
+          score: 0,
+          wins: 0,
+          defeats: 0,
+          games: 0,
+          playedWordsIds: [],
+        },
+        select: publicUserData,
+      });
+
+      return {
+        ok: true,
+        data: updatedUser,
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        ok: false,
+        error: "Error while trying to clear user data.",
       };
     }
   },

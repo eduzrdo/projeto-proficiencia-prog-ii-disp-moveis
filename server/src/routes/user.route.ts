@@ -8,8 +8,9 @@ export async function userRoute(fastify: FastifyInstance) {
   
   fastify.post('/save-game', userController.saveGame)
 
-  fastify.post('/signin', userController.authenticate)
-  fastify.post('/signup', userController.register)
+  fastify.post('/sign-in', userController.authenticate)
+  fastify.post('/sign-up', userController.register)
+  fastify.post('/clear-user-data', userController.clearUserData)
 
   fastify.delete('/', userController.removeAllUsers)
 }
