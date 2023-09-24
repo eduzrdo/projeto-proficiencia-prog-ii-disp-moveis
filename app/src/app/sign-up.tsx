@@ -18,9 +18,14 @@ export default function SignUp() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [registerButtonIsDisabled, setRegisterButtonIsDisabled] =
-    useState(true);
+  // const [registerButtonIsDisabled, setRegisterButtonIsDisabled] =
+  //   useState(true);
   const [error, setError] = useState("");
+
+  const invalidUsername =
+    !username || username.includes(" ") || username.length < 6;
+  const invalidPassword =
+    !password || password.includes(" ") || password.length < 6;
 
   const { signUp, loading } = useUser();
 
@@ -29,7 +34,9 @@ export default function SignUp() {
   };
 
   const handleRegister = async () => {
-    setError("");
+    if (invalidUsername || invalidPassword) {
+      return;
+    }
 
     const status = await signUp(username, password);
 
@@ -40,23 +47,30 @@ export default function SignUp() {
     router.replace("/");
   };
 
-  const handleChangeUsernameLogin = (text: string) => {
-    if (error !== "") {
-      setError("");
-    }
-
-    setUsername(text);
-  };
-
   useEffect(() => {
-    if (!username || !password) return;
-
-    if (username.length >= 6 && password.length >= 6) {
-      setRegisterButtonIsDisabled(false);
-      return;
+    if (!username && !password) {
+      return setError("");
     }
 
-    setRegisterButtonIsDisabled(true);
+    if (username.includes(" ")) {
+      return setError(
+        "Espaços em branco não são permitidos no nome de usuário."
+      );
+    } else if (password.includes(" ")) {
+      return setError("Espaços em branco não são permitidos na senha.");
+    }
+
+    setError("");
+
+    // if (password.includes(" ")) {
+    //   setError("Espaços em branco não são permitidos na senha.");
+    //   return;
+    // }
+
+    // if (username.length < 6 && password.length < 6) {
+    //   setError("");
+    //   return;
+    // }
   }, [username, password]);
 
   return (
@@ -67,7 +81,7 @@ export default function SignUp() {
         <Input
           placeholder="Nome de usuário"
           value={username}
-          onChangeText={handleChangeUsernameLogin}
+          onChangeText={setUsername}
           icon={AtSignIcon}
           autoFocus
         />
@@ -88,13 +102,15 @@ export default function SignUp() {
         message="Seu nome de usuário e sua senha devem conter ao menos 6 caracteres."
       />
 
-      {error && <Info type="alert" message={error} />}
+      {error && typeof error === "string" && (
+        <Info type="alert" message={error} />
+      )}
 
       <View style={{ flex: 1, justifyContent: "flex-end", paddingBottom: 20 }}>
         <Button
           onPress={handleRegister}
           title="Registrar"
-          disabled={registerButtonIsDisabled}
+          disabled={invalidUsername || invalidPassword}
           loading={loading}
         />
       </View>
