@@ -15,7 +15,7 @@ export const Loading = ({ stretch, ...rest }: LoadingProps) => {
         alignItems: "center",
       }}
     >
-      <ActivityIndicator size="large" color={colors.primary["700"]} {...rest} />
+      <ActivityIndicator size="large" color={colors.light[800]} {...rest} />
     </View>
   );
 };

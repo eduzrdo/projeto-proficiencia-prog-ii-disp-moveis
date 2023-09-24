@@ -68,7 +68,7 @@ export default function Home() {
               { backgroundColor: colors.ranks.gold },
             ]}
           >
-            <TrophyIcon width={30} height={30} fill={colors.primary[800]} />
+            <TrophyIcon width={30} height={30} fill={colors.light[800]} />
           </View>
         </View>
 
@@ -94,11 +94,7 @@ export default function Home() {
         <View style={styles.playButtonWrapper}>
           <Link href="/game" asChild>
             <Pressable style={styles.playButton}>
-              <GamepadIcon
-                width={32}
-                height={32}
-                stroke={colors.light["800"]}
-              />
+              <GamepadIcon width={32} height={32} stroke={colors.light[800]} />
               <Text style={styles.playButtonText}>JOGAR</Text>
             </Pressable>
           </Link>
@@ -137,7 +133,7 @@ const styles = StyleSheet.create({
   },
   scoreTitle: {
     ...typography.smallText,
-    color: colors.light["600"],
+    color: colors.light[600],
   },
   trophyWrapper: {
     width: 48,
@@ -163,7 +159,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderRadius: sizes.borderRadius,
     borderWidth: 1,
-    borderColor: colors.light["800"],
+    borderColor: colors.light[800],
     justifyContent: "center",
     alignItems: "center",
   },

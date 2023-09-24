@@ -44,7 +44,7 @@ export const Button = ({
 
         {Icon && <View style={{ width: 24, height: 24 }} />}
       </TouchableOpacity>
-      <ThickShadow color={rest.disabled ? colors.light["400"] : undefined} />
+      <ThickShadow color={rest.disabled ? colors.light[400] : undefined} />
     </View>
   );
 };
@@ -63,8 +63,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderWidth: 1,
     borderRadius: sizes.borderRadius,
-    borderColor: colors.primary[800],
-    color: colors.primary[800],
+    borderColor: colors.light[800],
+    color: colors.light[800],
   },
   buttonText: {
     flex: 1,

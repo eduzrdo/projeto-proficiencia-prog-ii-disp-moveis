@@ -69,7 +69,7 @@ export default function SignIn() {
         <HangmanLogotype
           width={screenWidth - 60}
           height={logotypeHeight}
-          fill={colors.primary[800]}
+          fill={colors.light[800]}
         />
       </View>
 
@@ -108,7 +108,7 @@ export default function SignIn() {
         <Text
           style={[
             typography.smallText,
-            { color: colors.light["400"], lineHeight: 14 },
+            { color: colors.light[400], lineHeight: 14 },
           ]}
         >
           ou
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
   separatorLine: {
     width: 20,
     height: 1,
-    backgroundColor: colors.light["400"],
+    backgroundColor: colors.light[400],
   },
   otherAuthenticationOptions: {
     alignItems: "center",
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   link: {
-    color: colors.primary["600"],
+    color: colors.primary[600],
     textDecorationLine: "underline",
   },
 });

@@ -13,8 +13,8 @@ import AlertTriangleIcon from "@/assets/svgs/alert-triangle-icon.svg";
 
 export const Info = ({ type, message }: InfoProps) => {
   const icon = {
-    info: <InfoIcon width={16} height={16} fill={colors.primary["700"]} />,
-    alert: <AlertTriangleIcon width={16} height={16} fill={colors.wrong} />,
+    info: <InfoIcon width={20} height={20} fill={colors.primary[700]} />,
+    alert: <AlertTriangleIcon width={20} height={20} fill={colors.wrong} />,
   };
 
   return (
@@ -34,6 +34,6 @@ const styles = StyleSheet.create({
   registerInfoText: {
     ...typography.smallText,
     flex: 1,
-    color: colors.light["600"],
+    color: colors.light[600],
   },
 });

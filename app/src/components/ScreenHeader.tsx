@@ -25,7 +25,7 @@ export const ScreenHeader = ({ title, hideBackButton }: ScreenHeaderProps) => {
     >
       {!hideBackButton && (
         <Pressable onPress={navigation.goBack} hitSlop={20}>
-          <ArrowLeftIcon width={24} height={24} fill={colors.light["800"]} />
+          <ArrowLeftIcon width={24} height={24} fill={colors.light[800]} />
         </Pressable>
       )}
 

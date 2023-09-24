@@ -116,6 +116,6 @@ const styles = StyleSheet.create({
   registerInfoText: {
     ...typography.smallText,
     flex: 1,
-    color: colors.light["600"],
+    color: colors.light[600],
   },
 });

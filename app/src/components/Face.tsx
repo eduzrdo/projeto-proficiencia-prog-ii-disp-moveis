@@ -13,7 +13,7 @@ type FaceProps = {
 
 const faceProps = {
   height: "100%",
-  fill: colors.light["800"],
+  fill: colors.light[800],
 };
 
 const faces = [

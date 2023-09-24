@@ -21,10 +21,10 @@ export const Input = ({
 }: InputProps) => {
   return (
     <View style={styles.inputWrapper}>
-      {Icon && <Icon fill={colors.light["400"]} />}
+      {Icon && <Icon fill={colors.light[400]} />}
 
       <TextInput
-        placeholderTextColor={colors.light["400"]}
+        placeholderTextColor={colors.light[400]}
         style={styles.inputField}
         keyboardAppearance="dark"
         {...rest}
@@ -33,9 +33,9 @@ export const Input = ({
       {rest.secureTextEntry !== undefined && (
         <Pressable onPress={togglePassword} hitSlop={20}>
           {showPassword ? (
-            <EyeIcon width={24} height={24} fill={colors.primary["600"]} />
+            <EyeIcon width={24} height={24} fill={colors.primary[600]} />
           ) : (
-            <EyeOffIcon width={24} height={24} fill={colors.light["400"]} />
+            <EyeOffIcon width={24} height={24} fill={colors.light[400]} />
           )}
         </Pressable>
       )}

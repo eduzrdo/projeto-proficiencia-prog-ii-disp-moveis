@@ -101,7 +101,7 @@ export default function Game() {
         <ScreenHeader hideBackButton title="Descubra a palavra" />
 
         <Pressable onPress={router.back} hitSlop={20}>
-          <FlagIcon fill={colors.light["800"]} />
+          <FlagIcon fill={colors.light[800]} />
         </Pressable>
       </View>
 
@@ -164,11 +164,11 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: colors.primary["600"],
+    backgroundColor: colors.primary[600],
   },
   tipText: {
     ...typography.textSemibold,
-    color: colors.light["800"],
+    color: colors.light[800],
   },
   letterFields: {
     flexDirection: "row",

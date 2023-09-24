@@ -67,10 +67,10 @@ const styles = StyleSheet.create({
   },
   playerName: {
     ...typography.textSemibold,
-    color: colors.light["800"],
+    color: colors.light[800],
   },
   lowOrderText: {
     ...typography.smallText,
-    color: colors.light["600"],
+    color: colors.light[600],
   },
 });

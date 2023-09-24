@@ -45,7 +45,7 @@ export default function Modal() {
     >
       <Animated.View
         style={{
-          backgroundColor: colors.light["100"],
+          backgroundColor: colors.light[100],
           borderRadius: sizes.borderRadius,
           width: "100%",
           translateY,
@@ -57,7 +57,7 @@ export default function Modal() {
             <Face mistakesCount={6} />
           </View>
 
-          <Text style={[typography.title, { color: colors.light["800"] }]}>
+          <Text style={[typography.title, { color: colors.light[800] }]}>
             Deseja sair?
           </Text>
 

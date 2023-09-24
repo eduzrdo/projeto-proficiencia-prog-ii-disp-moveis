@@ -43,7 +43,7 @@ export const LetterButton = ({
           styles.button,
           {
             opacity: disabled ? 0.25 : 1,
-            borderColor: disabled ? color : colors.light["800"],
+            borderColor: disabled ? color : colors.light[800],
           },
         ]}
         activeOpacity={1}
@@ -55,7 +55,7 @@ export const LetterButton = ({
           style={[
             typography.button,
             styles.buttonText,
-            { color: disabled ? color : colors.light["800"] },
+            { color: disabled ? color : colors.light[800] },
           ]}
         >
           {letter}
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderWidth: 1,
     borderRadius: sizes.borderRadius,
-    color: colors.primary[800],
+    color: colors.light[800],
   },
   buttonText: {
     flex: 1,

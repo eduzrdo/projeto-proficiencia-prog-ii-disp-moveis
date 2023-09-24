@@ -23,6 +23,7 @@ import PercentageIcon from "@/assets/svgs/percent-icon.svg";
 import EraserIcon from "@/assets/svgs/eraser-icon.svg";
 import TrashIcon from "@/assets/svgs/trash-icon.svg";
 import UnplugIcon from "@/assets/svgs/unplug-icon.svg";
+import ShieldCheckIcon from "@/assets/svgs/shield-check-icon.svg";
 
 import profilePicture from "@/assets/images/profile-picture-placeholder.png";
 
@@ -67,13 +68,22 @@ export default function Profile() {
 
           <Link href="/modal" asChild>
             <Pressable hitSlop={20}>
-              <UnplugIcon width={24} height={24} stroke={colors.light["800"]} />
+              <UnplugIcon width={24} height={24} stroke={colors.light[800]} />
             </Pressable>
           </Link>
         </View>
 
-        <View style={styles.avatarWrapper}>
-          <Avatar source={playerData.avatar ?? profilePicture} size="big" />
+        <View style={styles.avatarAndUsernameContainer}>
+          <View>
+            <Avatar source={playerData.avatar ?? profilePicture} size="big" />
+
+            {playerData.admin && (
+              <View style={styles.adminBadge}>
+                <ShieldCheckIcon width={20} height={20} fill={colors.white} />
+              </View>
+            )}
+          </View>
+
           <Text style={typography.title}>{playerData.username}</Text>
         </View>
 
@@ -119,7 +129,7 @@ export default function Profile() {
           </View>
         )}
       </ScrollView>
-      <StatusBar backgroundColor={colors.light["100"]} translucent />
+      <StatusBar backgroundColor={colors.light[100]} translucent />
     </>
   );
 }
@@ -132,8 +142,8 @@ type StatProps = {
 function Stat({ icon: Icon, value }: StatProps) {
   return (
     <View style={styles.statContainer}>
-      <Icon width={24} height={24} fill={colors.light["800"]} />
-      <Text style={[typography.textSemibold, { color: colors.light["800"] }]}>
+      <Icon width={24} height={24} fill={colors.light[800]} />
+      <Text style={[typography.textSemibold, { color: colors.light[800] }]}>
         {value}
       </Text>
     </View>
@@ -155,9 +165,19 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  avatarWrapper: {
+  avatarAndUsernameContainer: {
     alignItems: "center",
     gap: 20,
+  },
+  adminBadge: {
+    position: "absolute",
+    width: 28,
+    height: 28,
+    top: -12,
+    right: -12,
+    backgroundColor: colors.primary[700],
+    padding: 4,
+    borderRadius: 14,
   },
   playerDataContainer: {
     gap: 16,
@@ -173,7 +193,7 @@ const styles = StyleSheet.create({
   },
   playerDataContainerTitle: {
     ...typography.subtitle,
-    color: colors.light["600"],
+    color: colors.light[600],
   },
   statContainer: {
     flexDirection: "row",

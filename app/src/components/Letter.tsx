@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     width: 36,
     borderRadius: sizes.borderRadius,
     borderWidth: 1,
-    borderColor: colors.light["800"],
+    borderColor: colors.light[800],
     backgroundColor: colors.white,
   },
   letter: {
