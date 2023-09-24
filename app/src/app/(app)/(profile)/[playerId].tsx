@@ -29,7 +29,7 @@ export default function Profile() {
   const [playerData, setPlayerData] = useState<User>();
 
   const { playerId } = useLocalSearchParams<{ playerId: string }>();
-  const { signOut } = useUser();
+  const { user, signOut } = useUser();
 
   useEffect(() => {
     (async () => {
@@ -39,7 +39,7 @@ export default function Profile() {
     })();
   }, []);
 
-  if (!playerData) {
+  if (!playerData || !user) {
     return <Loading stretch />;
   }
 
@@ -48,11 +48,13 @@ export default function Profile() {
       <View style={styles.header}>
         <ScreenHeader title={`Perfil de ${playerData.username}`} />
 
-        <Link href="/(app)/(profile)/modal" asChild>
+        {/* {user.id === playerId && (
           <Pressable onPress={signOut} hitSlop={20}>
             <UnplugIcon width={24} height={24} stroke={colors.light["800"]} />
           </Pressable>
-        </Link>
+        )} */}
+
+        <Link href="/modal">MODAL</Link>
       </View>
 
       <View style={styles.avatarWrapper}>

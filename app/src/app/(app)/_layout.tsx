@@ -16,6 +16,13 @@ export default function AppLayout() {
       screenOptions={{
         headerShown: false,
       }}
-    />
+    >
+      <Stack.Screen
+        name="(profile)"
+        options={{
+          animation: "slide_from_right",
+        }}
+      />
+    </Stack>
   );
 }

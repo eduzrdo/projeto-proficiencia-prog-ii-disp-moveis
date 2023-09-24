@@ -20,7 +20,7 @@ export default function RootTabsLayout() {
         }}
       >
         <Tabs.Screen
-          name="index"
+          name="home"
           options={{
             tabBarIcon: ({ size, focused }) => (
               <HomeIcon
