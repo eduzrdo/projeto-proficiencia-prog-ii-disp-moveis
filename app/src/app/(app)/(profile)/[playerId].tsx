@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
+import { useState, useCallback } from "react";
 import { View, StyleSheet, Text, Pressable, ScrollView } from "react-native";
 import { SvgProps } from "react-native-svg";
-import { Link, useLocalSearchParams } from "expo-router";
+import { Link, useFocusEffect, useLocalSearchParams } from "expo-router";
 
 import { ScreenHeader } from "@/components/ScreenHeader";
 import { Avatar } from "@/components/Avatar";
 import { Loading } from "@/components/Loading";
 
-import { colors, sizes, typography } from "@/constants";
+import { colors, typography } from "@/constants";
 import { User, useUser } from "@/hooks/UserContext";
 import { formatScore } from "@/utils/formatScore";
 import { formatDate } from "@/utils/formatDate";
@@ -28,32 +28,21 @@ import profilePicture from "@/assets/images/profile-picture-placeholder.png";
 
 export default function Profile() {
   const [playerData, setPlayerData] = useState<User>();
-  const [error, setError] = useState("");
 
   const { playerId } = useLocalSearchParams<{ playerId: string }>();
-  const { user, clearUserData } = useUser();
+  const { user } = useUser();
 
-  const handleClearUserData = async () => {
-    if (!playerData?.id) return;
+  const fetchPlayerData = async () => {
+    const response = await api.get(`/user/${playerId}`);
 
-    const response = await clearUserData(playerData.id);
-
-    if (response.error) {
-      return setError(response.error);
-    }
-
-    if (response.data) {
-      return setPlayerData(response.data);
-    }
+    setPlayerData(response.data.data);
   };
 
-  useEffect(() => {
-    (async () => {
-      const response = await api.get(`/user/${playerId}`);
-
-      setPlayerData(response.data.data);
-    })();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchPlayerData();
+    }, [])
+  );
 
   if (!playerData) {
     return <Loading stretch />;
@@ -65,7 +54,7 @@ export default function Profile() {
         <View style={styles.header}>
           <ScreenHeader title="" />
 
-          <Link href="/modal" asChild>
+          <Link href={`/signOutModal`} asChild>
             <Pressable hitSlop={20}>
               <UnplugIcon width={24} height={24} stroke={colors.light[800]} />
             </Pressable>
@@ -114,17 +103,37 @@ export default function Profile() {
             <Text style={styles.playerDataContainerTitle}>
               Gerenciar jogador
             </Text>
-            <Pressable
-              onPress={handleClearUserData}
-              style={styles.manageUserButton}
+            <Link
+              href={{
+                pathname: "/clearUserDataModal",
+                params: {
+                  playerId,
+                  playerUsername: playerData.username,
+                },
+              }}
+              asChild
             >
-              <EraserIcon width={24} height={24} fill={colors.wrong} />
-              <Text style={styles.manageUserButtonText}>Limpar dados</Text>
-            </Pressable>
-            <Pressable style={styles.manageUserButton}>
-              <TrashIcon width={24} height={24} fill={colors.wrong} />
-              <Text style={styles.manageUserButtonText}>Excluir conta</Text>
-            </Pressable>
+              <Pressable hitSlop={10} style={styles.manageUserButton}>
+                <EraserIcon width={24} height={24} fill={colors.wrong} />
+                <Text style={styles.manageUserButtonText}>Limpar dados</Text>
+              </Pressable>
+            </Link>
+
+            {/* <Link
+              href={{
+                pathname: "/deleteUserModal",
+                params: {
+                  playerId,
+                  playerUsername: playerData.username,
+                },
+              }}
+              asChild
+            >
+              <Pressable hitSlop={10} style={styles.manageUserButton}>
+                <TrashIcon width={24} height={24} fill={colors.wrong} />
+                <Text style={styles.manageUserButtonText}>Excluir conta</Text>
+              </Pressable>
+            </Link> */}
           </View>
         )}
       </ScrollView>
@@ -147,8 +156,6 @@ function Stat({ icon: Icon, value }: StatProps) {
     </View>
   );
 }
-
-// function AdminOption();
 
 const styles = StyleSheet.create({
   container: {

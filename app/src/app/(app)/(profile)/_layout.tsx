@@ -10,7 +10,23 @@ export default function ProfileLayout() {
         }}
       >
         <Stack.Screen
-          name="modal"
+          name="signOutModal"
+          options={{
+            presentation: "transparentModal",
+            animation: "none",
+          }}
+        />
+
+        <Stack.Screen
+          name="clearUserDataModal"
+          options={{
+            presentation: "transparentModal",
+            animation: "none",
+          }}
+        />
+
+        <Stack.Screen
+          name="deleteUserModal"
           options={{
             presentation: "transparentModal",
             animation: "none",

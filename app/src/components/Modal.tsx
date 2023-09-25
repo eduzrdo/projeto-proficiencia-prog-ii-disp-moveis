@@ -23,7 +23,7 @@ export const Modal = ({ children }: PropsWithChildren) => {
     });
 
     opacity.value = withTiming(1, { duration: 300 });
-  }, []);
+  });
 
   return (
     <Animated.View

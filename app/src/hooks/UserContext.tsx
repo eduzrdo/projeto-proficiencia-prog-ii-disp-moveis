@@ -168,6 +168,8 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
   };
 
   const clearUserData = async (targetUserId: string) => {
+    setLoading(true);
+
     const response = await api.post<ClearUserDataResponse>(
       "/user/clear-user-data",
       {
@@ -177,6 +179,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
     );
 
     if (response.data.error) {
+      setLoading(false);
       return {
         ok: false,
         error: response.data.error,
@@ -187,6 +190,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
       setUser(response.data.data);
     }
 
+    setLoading(false);
     return {
       ok: true,
       data: response.data.data,

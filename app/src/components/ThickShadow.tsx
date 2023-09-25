@@ -4,17 +4,18 @@ import { colors, sizes } from "@/constants";
 
 type ThickShadowProps = {
   color?: string;
+  disabled?: boolean;
 };
 
-export const ThickShadow = ({ color }: ThickShadowProps) => {
+export const ThickShadow = ({ color, disabled }: ThickShadowProps) => {
   return (
     <>
       <View
         style={[
           styles.shadow,
           {
-            backgroundColor: color ? color : colors.light[900],
-            opacity: color ? 0.4 : 1,
+            backgroundColor: color ? color : colors.light[800],
+            opacity: disabled ? 0.3 : 1,
           },
         ]}
       />

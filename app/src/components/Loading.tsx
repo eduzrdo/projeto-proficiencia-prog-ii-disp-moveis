@@ -6,7 +6,7 @@ type LoadingProps = ActivityIndicatorProps & {
   stretch?: boolean;
 };
 
-export const Loading = ({ stretch, ...rest }: LoadingProps) => {
+export const Loading = ({ stretch, color, ...rest }: LoadingProps) => {
   return (
     <View
       style={{
@@ -15,7 +15,11 @@ export const Loading = ({ stretch, ...rest }: LoadingProps) => {
         alignItems: "center",
       }}
     >
-      <ActivityIndicator size="large" color={colors.primary[700]} {...rest} />
+      <ActivityIndicator
+        size="large"
+        color={color ?? colors.primary[700]}
+        {...rest}
+      />
     </View>
   );
 };

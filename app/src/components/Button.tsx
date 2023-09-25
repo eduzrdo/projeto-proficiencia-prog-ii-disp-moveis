@@ -15,36 +15,45 @@ import { colors, sizes, typography } from "@/constants";
 
 type ButtonProps = TouchableOpacityProps & {
   title: string;
-  width?: DimensionValue;
   icon?: React.FC<SvgProps>;
+  flex?: number;
+  width?: DimensionValue;
+  color?: string;
   loading?: boolean;
 };
 
 export const Button = ({
   title,
-  width = "100%",
   icon: Icon,
+  flex,
+  width = "100%",
+  color = colors.light[800],
   loading,
   ...rest
 }: ButtonProps) => {
   return (
-    <View style={[styles.buttonWrapper, { width }]}>
+    <View style={[styles.buttonWrapper, !!flex ? { flex } : { width }]}>
       <TouchableOpacity
-        style={[styles.button, { opacity: rest.disabled ? 0.3 : 1 }]}
+        style={[
+          styles.button,
+          { borderColor: color, opacity: rest.disabled ? 0.3 : 1 },
+        ]}
         activeOpacity={1}
         {...rest}
       >
         {Icon && <Icon />}
 
         {loading ? (
-          <Loading stretch size="small" />
+          <Loading stretch size="small" color={color} />
         ) : (
-          <Text style={[typography.button, styles.buttonText]}>{title}</Text>
+          <Text style={[typography.button, styles.buttonText, { color }]}>
+            {title}
+          </Text>
         )}
 
         {Icon && <View style={{ width: 24, height: 24 }} />}
       </TouchableOpacity>
-      <ThickShadow color={rest.disabled ? colors.light[400] : undefined} />
+      <ThickShadow disabled={rest.disabled} color={color} />
     </View>
   );
 };
