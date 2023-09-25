@@ -16,9 +16,11 @@ export default function Leaderboard() {
   const [topPlayers, setTopPlayers] = useState<User[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredPlayers = topPlayers.filter((player) =>
-    player.username.toLowerCase().includes(searchQuery.trim().toLowerCase())
-  );
+  const filteredPlayers = !searchQuery
+    ? topPlayers
+    : topPlayers.filter((player) =>
+        player.username.toLowerCase().includes(searchQuery.trim().toLowerCase())
+      );
 
   useEffect(() => {
     (async () => {

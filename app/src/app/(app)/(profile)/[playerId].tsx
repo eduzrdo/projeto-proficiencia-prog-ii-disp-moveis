@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { View, StyleSheet, Text, Pressable, ScrollView } from "react-native";
 import { SvgProps } from "react-native-svg";
 import { Link, useLocalSearchParams } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 
 import { ScreenHeader } from "@/components/ScreenHeader";
 import { Avatar } from "@/components/Avatar";
@@ -129,7 +128,6 @@ export default function Profile() {
           </View>
         )}
       </ScrollView>
-      <StatusBar backgroundColor={colors.light[100]} translucent />
     </>
   );
 }
