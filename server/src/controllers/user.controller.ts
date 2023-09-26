@@ -1,10 +1,10 @@
 import { FastifyRequest } from "fastify";
+import { prisma } from "../prisma/client";
 import { z } from "zod";
 
-import { prisma } from "../prisma/client";
 import { fastify } from "../../server";
 import { calculateScore } from "../utils/calculateScore";
-import { Prisma } from "@prisma/client";
+import { serverConfig } from "../config/server";
 
 const username = z
   .string({
@@ -28,6 +28,14 @@ const userSchemaAuthenticate = z.object({
   password: z.string().min(6, {
     message: "field 'password' must have at least 6 characters.",
   }),
+});
+
+const userSchemaRegister = z.object({
+  username,
+  password: z.string().min(6, {
+    message: "field 'password' must have at least 6 characters.",
+  }),
+  avatar: z.string(),
 });
 
 const userSchemaClearUserData = z.object({
@@ -197,7 +205,9 @@ export const userController = {
 
   register: async (request: FastifyRequest) => {
     try {
-      const { username, password } = userSchemaAuthenticate.parse(request.body);
+      const { username, password, avatar } = userSchemaRegister.parse(
+        request.body
+      );
 
       const userExists = await prisma.user.findUnique({
         where: {
@@ -219,6 +229,7 @@ export const userController = {
         data: {
           username,
           password: hash,
+          avatar: `http://${serverConfig.serverAddress}:${serverConfig.serverPort}/avatar/${avatar}.png`,
         },
       });
 

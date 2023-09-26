@@ -11,7 +11,7 @@ import { colors, typography } from "@/constants";
 import { User, useUser } from "@/hooks/UserContext";
 import { formatScore } from "@/utils/formatScore";
 import { formatDate } from "@/utils/formatDate";
-import { api } from "@/utils/axios";
+import { api } from "@/utils/api";
 
 import TrophySmallIcon from "@/assets/svgs/trophy-small-icon.svg";
 import GradeIcon from "@/assets/svgs/grade-icon.svg";
@@ -40,6 +40,11 @@ export default function Profile() {
 
   useFocusEffect(
     useCallback(() => {
+      // COMMENTED CODE BELOW USED TO MOCK PLAYER DATA USING AUTHENTICATED USER
+      if (user) {
+        return setPlayerData(user);
+      }
+
       fetchPlayerData();
     }, [])
   );
@@ -63,7 +68,12 @@ export default function Profile() {
 
         <View style={styles.avatarAndUsernameContainer}>
           <View>
-            <Avatar source={playerData.avatar ?? profilePicture} size="big" />
+            <Avatar
+              source={
+                playerData.avatar ? { uri: playerData.avatar } : profilePicture
+              }
+              size="big"
+            />
 
             {playerData.admin && (
               <View style={styles.adminBadge}>
@@ -77,7 +87,7 @@ export default function Profile() {
 
         <View style={styles.playerDataContainer}>
           <Text style={styles.playerDataContainerTitle}>Dados do Jogador</Text>
-          <Stat icon={TrophySmallIcon} value={playerData.wins} />
+          {/* <Stat icon={TrophySmallIcon} value={playerData.wins} /> */}
           <Stat icon={GradeIcon} value={formatScore(playerData.score)} />
           <Stat icon={CalendarIcon} value={formatDate(playerData.createdAt)} />
         </View>

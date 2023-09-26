@@ -43,7 +43,15 @@ export default function RootLayout() {
         screenOptions={{
           headerShown: false,
         }}
-      />
+      >
+        <Stack.Screen
+          name="avatarPicker"
+          options={{
+            presentation: "transparentModal",
+            animation: "none",
+          }}
+        />
+      </Stack>
 
       <StatusBar backgroundColor="transparent" translucent />
     </UserContextProvider>

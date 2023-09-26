@@ -1,26 +1,36 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  Modal as ReactModal,
+  ModalProps as ReactModalProps,
+  ScrollView,
+} from "react-native";
 import { router } from "expo-router";
-import { StyleSheet, View } from "react-native";
 
 import { Input } from "@/components/Input";
 import { ScreenFrame } from "@/components/ScreenFrame";
 import { ScreenHeader } from "@/components/ScreenHeader";
 import { Button } from "@/components/Button";
 import { Info } from "@/components/Info";
+import { Avatar } from "@/components/Avatar";
 
 import { useUser } from "@/hooks/UserContext";
-import { colors, typography } from "@/constants";
+import { colors, sizes, typography } from "@/constants";
 
 import AtSignIcon from "@/assets/svgs/at-sign-icon.svg";
 import KeyIcon from "@/assets/svgs/key-icon.svg";
+import { api } from "@/utils/api";
 
 export default function SignUp() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  // const [registerButtonIsDisabled, setRegisterButtonIsDisabled] =
-  //   useState(true);
   const [error, setError] = useState("");
+  const [avatarModalIsOpen, setAvatarModalIsOpen] = useState(false);
+  const [selectedAvatar, setSelectedAvatar] = useState("42");
 
   const invalidUsername =
     !username || username.includes(" ") || username.length < 6;
@@ -38,13 +48,22 @@ export default function SignUp() {
       return;
     }
 
-    const status = await signUp(username, password);
+    const status = await signUp(username, password, selectedAvatar);
 
     if (status.error) {
       return setError(status.error);
     }
 
     router.replace("/");
+  };
+
+  const toggleAvatarModal = () => {
+    setAvatarModalIsOpen(!avatarModalIsOpen);
+  };
+
+  const selectAvatar = (avatarNumberString: string) => {
+    setSelectedAvatar(avatarNumberString);
+    setAvatarModalIsOpen(false);
   };
 
   useEffect(() => {
@@ -61,17 +80,11 @@ export default function SignUp() {
     }
 
     setError("");
-
-    // if (password.includes(" ")) {
-    //   setError("Espaços em branco não são permitidos na senha.");
-    //   return;
-    // }
-
-    // if (username.length < 6 && password.length < 6) {
-    //   setError("");
-    //   return;
-    // }
   }, [username, password]);
+
+  useEffect(() => {
+    const randomNumber = Math.floor(Math.random() * 49) + 1;
+  }, []);
 
   return (
     <ScreenFrame>
@@ -97,14 +110,30 @@ export default function SignUp() {
         />
       </View>
 
-      <Info
-        type="info"
-        message="Seu nome de usuário e sua senha devem conter ao menos 6 caracteres."
-      />
+      <View style={{ gap: 10 }}>
+        <Info
+          type="info"
+          message="Seu nome de usuário e sua senha devem conter ao menos 6 caracteres."
+        />
 
-      {error && typeof error === "string" && (
-        <Info type="alert" message={error} />
-      )}
+        {error && typeof error === "string" && (
+          <Info type="alert" message={error} />
+        )}
+      </View>
+
+      <View style={styles.changeAvatarButtonContainer}>
+        <Text style={styles.pickYourAvatarText}>Escolha seu avatar:</Text>
+        <Pressable
+          style={styles.changeAvatarButton}
+          onPress={toggleAvatarModal}
+        >
+          <Avatar
+            source={{
+              uri: `http://192.168.44.189:3333/avatar/${selectedAvatar}.png`,
+            }}
+          />
+        </Pressable>
+      </View>
 
       <View style={{ flex: 1, justifyContent: "flex-end", paddingBottom: 20 }}>
         <Button
@@ -114,9 +143,91 @@ export default function SignUp() {
           loading={loading}
         />
       </View>
+
+      <Modal
+        visible={avatarModalIsOpen}
+        toggleModal={toggleAvatarModal}
+        selectAvatar={selectAvatar}
+      />
     </ScreenFrame>
   );
 }
+
+type ModalProps = ReactModalProps & {
+  toggleModal: () => void;
+  selectAvatar: (avatarNumberString: string) => void;
+};
+
+const Modal = ({ toggleModal, selectAvatar, ...rest }: ModalProps) => {
+  const handleSelectAvatar = (avatarNumber: number) => {
+    const aavatarNumberString = avatarNumber.toString().padStart(2, "0");
+    selectAvatar(aavatarNumberString);
+    toggleModal();
+  };
+
+  return (
+    <ReactModal
+      animationType="slide"
+      transparent={true}
+      statusBarTranslucent={true}
+      {...rest}
+    >
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "flex-end",
+          // backgroundColor: "rgba(0, 0, 0, 0.2)",
+        }}
+      >
+        <View
+          style={{
+            backgroundColor: colors.white,
+            height: "70%",
+            gap: 20,
+            paddingTop: 20,
+          }}
+        >
+          <Text style={[typography.subtitle, { textAlign: "center" }]}>
+            Escolha seu avatar:
+          </Text>
+
+          <View style={{ flex: 1 }}>
+            <ScrollView
+              contentContainerStyle={{
+                flexDirection: "row",
+                justifyContent: "center",
+                flexWrap: "wrap",
+                gap: 12,
+                paddingTop: 10,
+                paddingBottom: 20,
+                paddingHorizontal: 20,
+              }}
+            >
+              {Array(49)
+                .fill("")
+                .map((_, index) => {
+                  return (
+                    <Pressable
+                      key={index}
+                      onPress={() => handleSelectAvatar(index + 1)}
+                    >
+                      <Avatar
+                        source={{
+                          uri: `http://192.168.44.189:3333/avatar/${(index + 1)
+                            .toString()
+                            .padStart(2, "0")}.png`,
+                        }}
+                      />
+                    </Pressable>
+                  );
+                })}
+            </ScrollView>
+          </View>
+        </View>
+      </View>
+    </ReactModal>
+  );
+};
 
 const styles = StyleSheet.create({
   formContainer: {
@@ -133,5 +244,20 @@ const styles = StyleSheet.create({
     ...typography.smallText,
     flex: 1,
     color: colors.light[600],
+  },
+  changeAvatarButtonContainer: {
+    alignItems: "center",
+  },
+  pickYourAvatarText: {
+    ...typography.smallTextSemibold,
+    color: colors.light[800],
+    marginBottom: 4,
+  },
+  changeAvatarButton: {
+    padding: 4,
+    borderWidth: 2,
+    borderColor: colors.primary[700],
+    borderRadius: sizes.borderRadiusBig,
+    borderStyle: "dashed",
   },
 });

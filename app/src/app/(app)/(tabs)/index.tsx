@@ -66,11 +66,11 @@ export default function Home() {
             </Text>
           </View>
 
-          <View
+          {/* <View
             style={[styles.trophyWrapper, { backgroundColor: colors.ranks[1] }]}
           >
             <TrophyIcon width={30} height={30} fill={colors.light[800]} />
-          </View>
+          </View> */}
         </View>
 
         <ThickShadow />

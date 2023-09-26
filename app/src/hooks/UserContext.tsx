@@ -32,7 +32,11 @@ type ServerBaseResponse = {
 
 interface UserContextData {
   user: User | null;
-  signUp: (username: string, password: string) => Promise<ServerBaseResponse>;
+  signUp: (
+    username: string,
+    password: string,
+    avatar: string
+  ) => Promise<ServerBaseResponse>;
   signIn: (username: string, password: string) => Promise<ServerBaseResponse>;
   signOut: () => void;
   drawWord: () => Promise<{ ok: boolean; data?: DrawnWord; error?: string }>;
@@ -95,12 +99,13 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
   );
   const [loading, setLoading] = useState(false);
 
-  const signUp = async (username: string, password: string) => {
+  const signUp = async (username: string, password: string, avatar: string) => {
     setLoading(true);
 
     const response = await api.post<AuthenticationResponse>("/user/sign-up", {
       username,
       password,
+      avatar,
     });
 
     if (response.data.error) {

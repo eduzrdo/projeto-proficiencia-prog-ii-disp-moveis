@@ -3,26 +3,37 @@ import Animated, {
   useSharedValue,
   withTiming,
   Easing,
+  withDelay,
 } from "react-native-reanimated";
 
 import { colors, sizes } from "@/constants";
 
-export const Modal = ({ children }: PropsWithChildren) => {
+type ModalProps = PropsWithChildren & {
+  delay?: number;
+};
+
+export const Modal = ({ delay = 0, children }: ModalProps) => {
   const backgroundColor = useSharedValue("rgba(0, 0, 0, 0)");
   const translateY = useSharedValue(40);
   const opacity = useSharedValue(0);
 
   useEffect(() => {
-    backgroundColor.value = withTiming("rgba(0, 0, 0, 0.15)", {
-      duration: 300,
-    });
+    backgroundColor.value = withDelay(
+      delay,
+      withTiming("rgba(0, 0, 0, 0.15)", {
+        duration: 300,
+      })
+    );
 
-    translateY.value = withTiming(0, {
-      duration: 200,
-      easing: Easing.out(Easing.ease),
-    });
+    translateY.value = withDelay(
+      delay,
+      withTiming(0, {
+        duration: 300,
+        easing: Easing.out(Easing.ease),
+      })
+    );
 
-    opacity.value = withTiming(1, { duration: 300 });
+    opacity.value = withDelay(delay, withTiming(1, { duration: 300 }));
   });
 
   return (

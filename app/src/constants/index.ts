@@ -28,6 +28,7 @@ export const colors = {
 
 export const sizes = {
   borderRadius: 8,
+  borderRadiusBig: 12,
 };
 
 export const typography: { [key: string]: TextStyle } = {
@@ -45,6 +46,11 @@ export const typography: { [key: string]: TextStyle } = {
   },
   smallText: {
     fontFamily: "Inter_400Regular",
+    fontSize: 14,
+    lineHeight: 21,
+  },
+  smallTextSemibold: {
+    fontFamily: "Inter_600SemiBold",
     fontSize: 14,
     lineHeight: 21,
   },
