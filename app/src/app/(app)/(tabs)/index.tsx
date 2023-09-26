@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { Text, View, StyleSheet, Pressable } from "react-native";
-import { Link } from "expo-router";
+import { useCallback, useState } from "react";
+import { Text, View, StyleSheet, Pressable, ScrollView } from "react-native";
+import { Link, useFocusEffect } from "expo-router";
 
 import { ScreenFrame } from "@/components/ScreenFrame";
 import { ThickShadow } from "@/components/ThickShadow";
@@ -25,13 +25,17 @@ export default function Home() {
 
   if (!user) return <Loading stretch />;
 
-  useEffect(() => {
-    (async () => {
-      const top3playersResponse = await api.get("/user?amount=3");
+  const updateTop3players = async () => {
+    const top3playersResponse = await api.get("/user?amount=3");
 
-      setTop3players(top3playersResponse.data.data);
-    })();
-  }, []);
+    setTop3players(top3playersResponse.data.data);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      updateTop3players();
+    }, [])
+  );
 
   return (
     <ScreenFrame>
@@ -63,10 +67,7 @@ export default function Home() {
           </View>
 
           <View
-            style={[
-              styles.trophyWrapper,
-              { backgroundColor: colors.ranks.gold },
-            ]}
+            style={[styles.trophyWrapper, { backgroundColor: colors.ranks[1] }]}
           >
             <TrophyIcon width={30} height={30} fill={colors.light[800]} />
           </View>
@@ -78,16 +79,18 @@ export default function Home() {
       <View style={styles.bestPlayersContainer}>
         <Text style={typography.subtitle}>Melhores Jogadores</Text>
 
-        {top3players.map((player, index) => (
-          <PlayerCard
-            key={player.id}
-            playerId={player.id}
-            rank={index + 1}
-            playerUsername={player.username}
-            avatarUrl={player.avatar}
-            score={player.score}
-          />
-        ))}
+        <ScrollView contentContainerStyle={styles.bestPlayerContent}>
+          {top3players.map((player, index) => (
+            <PlayerCard
+              key={player.id}
+              playerId={player.id}
+              rankPosition={index + 1}
+              playerUsername={player.username}
+              avatarUrl={player.avatar}
+              score={player.score}
+            />
+          ))}
+        </ScrollView>
       </View>
 
       <View style={styles.playButtonContainer}>
@@ -143,10 +146,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   bestPlayersContainer: {
+    flex: 1,
+    gap: 20,
+  },
+  bestPlayerContent: {
     gap: 20,
   },
   playButtonContainer: {
-    flex: 1,
+    paddingBottom: 40,
     justifyContent: "center",
     alignItems: "center",
   },

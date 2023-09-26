@@ -11,7 +11,7 @@ type PlayerCardProps = {
   playerId: string;
   avatarUrl?: string | null;
   playerUsername: string;
-  rank?: number;
+  rankPosition: number;
   score: number;
 };
 
@@ -19,7 +19,7 @@ export const PlayerCard = ({
   playerId,
   avatarUrl,
   playerUsername,
-  // rank,
+  rankPosition,
   score,
 }: PlayerCardProps) => {
   const imageSource = avatarUrl ? { uri: avatarUrl } : profilePicture;
@@ -35,23 +35,24 @@ export const PlayerCard = ({
           }}
         >
           <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              backgroundColor: colors.white,
-              borderRadius: sizes.borderRadius,
-            }}
+            style={[
+              styles.avatarAndRankPosition,
+              {
+                backgroundColor:
+                  rankPosition <= 3 ? colors.ranks[rankPosition - 1] : "#fff",
+              },
+            ]}
           >
             <Avatar source={imageSource} />
-            {/* <Text
+            <Text
               style={[typography.subtitle, { width: 50, textAlign: "center" }]}
             >
-              {rank}
-            </Text> */}
+              {rankPosition}
+            </Text>
           </View>
 
           <View style={styles.userScore}>
-            <Text style={typography.textSemibold}>{playerUsername}</Text>
+            <Text style={styles.playerUsername}>{playerUsername}</Text>
             <Text style={styles.lowOrderText}>{score} pontos</Text>
           </View>
         </View>
@@ -68,6 +69,15 @@ const styles = StyleSheet.create({
   playerName: {
     ...typography.textSemibold,
     color: colors.light[800],
+  },
+  avatarAndRankPosition: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.white,
+    borderRadius: sizes.borderRadius,
+  },
+  playerUsername: {
+    ...typography.textSemibold,
   },
   lowOrderText: {
     ...typography.smallText,

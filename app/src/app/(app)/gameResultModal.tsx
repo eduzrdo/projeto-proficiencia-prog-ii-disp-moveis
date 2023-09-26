@@ -8,7 +8,7 @@ import { Modal } from "@/components/Modal";
 
 import { useUser } from "@/hooks/UserContext";
 
-import { typography, colors, sizes } from "@/constants";
+import { typography, colors } from "@/constants";
 import { Loading } from "@/components/Loading";
 
 export default function GameResultModal() {
@@ -133,8 +133,3 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
-
-// color: colors.white,
-// backgroundColor: colors.wrong,
-// borderRadius: sizes.borderRadius,
-// backgroundColor: colors.wrong,

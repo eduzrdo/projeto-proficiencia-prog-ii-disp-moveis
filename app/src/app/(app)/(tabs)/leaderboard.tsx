@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { View, FlatList, StyleSheet } from "react-native";
+import { useFocusEffect } from "expo-router";
 
 import { ScreenFrame } from "@/components/ScreenFrame";
 import { ScreenHeader } from "@/components/ScreenHeader";
@@ -22,13 +23,17 @@ export default function Leaderboard() {
         player.username.toLowerCase().includes(searchQuery.trim().toLowerCase())
       );
 
-  useEffect(() => {
-    (async () => {
-      const top3playersResponse = await api.get("/user?amount=100");
+  const updateTopPlayers = async () => {
+    const top3playersResponse = await api.get("/user?amount=50");
 
-      setTopPlayers(top3playersResponse.data.data);
-    })();
-  }, []);
+    setTopPlayers(top3playersResponse.data.data);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      updateTopPlayers();
+    }, [])
+  );
 
   return (
     <ScreenFrame>
@@ -44,11 +49,10 @@ export default function Leaderboard() {
       <View style={styles.flatListContainer}>
         <FlatList
           data={filteredPlayers}
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <PlayerCard
-              // key={item.id}
               playerId={item.id}
-              // rank={item.rank}
+              rankPosition={index + 1}
               avatarUrl={item.avatar}
               playerUsername={item.username}
               score={item.score}
