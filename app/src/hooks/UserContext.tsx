@@ -40,7 +40,13 @@ interface UserContextData {
     wordId: string,
     gameDuration: number,
     gameResult: 0 | 1
-  ) => Promise<ServerBaseResponse>;
+  ) => Promise<{
+    ok: boolean;
+    data?: {
+      score: number;
+    };
+    error?: string;
+  }>;
   clearUserData: (
     targetUserId: string
   ) => Promise<{ ok: boolean; data?: User; error?: string }>;
@@ -61,8 +67,14 @@ type DrawWordResponse = ServerBaseResponse & {
   data: DrawnWord;
 };
 
-type SaveGameResponse = AuthenticationResponse;
 type ClearUserDataResponse = AuthenticationResponse;
+
+type SaveGameResponse = ServerBaseResponse & {
+  data: {
+    updatedUserData: User;
+    score: number;
+  };
+};
 
 export const UserContextProvider = ({ children }: UserContextProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
@@ -160,10 +172,13 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
       };
     }
 
-    setUser(response.data.data);
+    setUser(response.data.data.updatedUserData);
     setLoading(false);
     return {
       ok: true,
+      data: {
+        score: response.data.data.score,
+      },
     };
   };
 

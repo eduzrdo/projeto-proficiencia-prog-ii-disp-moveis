@@ -261,10 +261,7 @@ export const userController = {
 
       const wordLength = playedWord.word.length;
 
-      let dataResult: {
-        score?: {
-          increment: number;
-        };
+      let dataQuery: {
         wins?: {
           increment: 1;
         };
@@ -274,22 +271,26 @@ export const userController = {
         games: {
           increment: 1;
         };
+        score: {
+          increment: number;
+        };
       } = {
         games: {
           increment: 1,
         },
+        score: {
+          increment:
+            gameResult === 0 ? 0 : calculateScore(wordLength, gameDuration),
+        },
       };
 
       if (gameResult === 0) {
-        dataResult.defeats = {
+        dataQuery.defeats = {
           increment: 1,
         };
       } else {
-        dataResult.wins = {
+        dataQuery.wins = {
           increment: 1,
-        };
-        dataResult.score = {
-          increment: calculateScore(wordLength, gameDuration),
         };
       }
 
@@ -297,13 +298,16 @@ export const userController = {
         where: {
           id: userId,
         },
-        data: dataResult,
+        data: dataQuery,
         select: publicUserData,
       });
 
       return {
         ok: true,
-        data: updatedUserData,
+        data: {
+          updatedUserData,
+          score: dataQuery.score.increment,
+        },
       };
     } catch (error) {
       console.log(error);

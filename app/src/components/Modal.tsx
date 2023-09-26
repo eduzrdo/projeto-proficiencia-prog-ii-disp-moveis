@@ -29,6 +29,7 @@ export const Modal = ({ children }: PropsWithChildren) => {
     <Animated.View
       style={{
         backgroundColor,
+        // backgroundColor: "rgba(0, 0, 0, 0.15)",
         flex: 1,
         justifyContent: "center",
         alignItems: "center",

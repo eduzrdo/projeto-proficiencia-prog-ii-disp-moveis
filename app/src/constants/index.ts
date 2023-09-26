@@ -38,16 +38,19 @@ export const typography: { [key: string]: TextStyle } = {
   text: {
     fontFamily: 'Inter_400Regular',
     fontSize: 16,
+    lineHeight: 23,
     color: colors.light['800'],
   },
   textSemibold: {
     fontFamily: 'Inter_600SemiBold',
     fontSize: 16,
+    lineHeight: 23,
     color: colors.light['800'],
   },
   smallText: {
     fontFamily: 'Inter_400Regular',
     fontSize: 14,
+    lineHeight: 21
   },
   button: {
     fontFamily: 'Inter_600SemiBold',

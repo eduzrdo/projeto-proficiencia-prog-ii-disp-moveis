@@ -49,6 +49,7 @@ export const LetterButton = ({
         activeOpacity={1}
         onPress={disable ? () => {} : handleOnPress}
         disabled={disabled}
+        hitSlop={10}
         {...rest}
       >
         <Text

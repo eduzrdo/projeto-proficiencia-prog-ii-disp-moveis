@@ -15,12 +15,18 @@ export default function AppLayout() {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="(tabs)" />
-
       <Stack.Screen
         name="(profile)"
         options={{
           animation: "slide_from_right",
+        }}
+      />
+
+      <Stack.Screen
+        name="gameResultModal"
+        options={{
+          presentation: "transparentModal",
+          animation: "none",
         }}
       />
     </Stack>

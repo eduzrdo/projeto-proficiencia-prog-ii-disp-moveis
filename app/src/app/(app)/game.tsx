@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 
 import { ScreenFrame } from "@/components/ScreenFrame";
 import { ScreenHeader } from "@/components/ScreenHeader";
@@ -13,48 +13,82 @@ import { colors, typography } from "@/constants";
 import { letters } from "@/utils/letters";
 import { useUser, DrawnWord } from "@/hooks/UserContext";
 
-import FlagIcon from "@/assets/svgs/flag-icon.svg";
+// import FlagIcon from "@/assets/svgs/flag-icon.svg";
 import LightbulbIcon from "@/assets/svgs/lightbulb-icon.svg";
+import AlarmClockIcon from "@/assets/svgs/alarm-clock-icon.svg";
+
+const maxGameTime = 90;
 
 export default function Game() {
-  const [drawnWord, setDrawnWord] = useState<DrawnWord>();
+  const [drawnWord, setDrawnWord] = useState<DrawnWord | null>(null);
   const [ongoingWord, setOngoingWord] = useState<string[]>([]);
 
   const [hitsCount, setHitsCount] = useState(0);
   const [mistakesCount, setMistakesCount] = useState(0);
+  const [remainingGameTime, setRemainingGameTime] = useState(maxGameTime);
   const [gameOver, setGameOver] = useState(false);
 
-  const { drawWord, saveGame } = useUser();
+  const { drawWord } = useUser();
 
-  useEffect(() => {
-    (async () => {
-      const result = await drawWord();
+  const drawNewWord = async () => {
+    const result = await drawWord();
 
-      if (result.error || !result.data) {
-        return router.back();
-      }
+    if (result.error || !result.data) {
+      return router.back();
+    }
 
-      setDrawnWord(result.data);
-      setOngoingWord(Array(result.data.word.length).fill(""));
-    })();
-  }, []);
+    setDrawnWord(result.data);
+    setOngoingWord(Array(result.data.word.length).fill(""));
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      setDrawnWord(null);
+      setHitsCount(0);
+      setMistakesCount(0);
+      setGameOver(false);
+      setRemainingGameTime(maxGameTime);
+      drawNewWord();
+    }, [])
+  );
 
   useEffect(() => {
     if (!gameOver || !drawnWord) return;
 
     (async () => {
-      const gameResult = mistakesCount < 6 ? 1 : 0;
-      await saveGame(drawnWord.id, 10, gameResult);
+      const gameResult = remainingGameTime === 0 || mistakesCount === 6 ? 0 : 1;
 
-      router.back();
+      router.push({
+        pathname: "/gameResultModal",
+        params: {
+          gameResult,
+          word: drawnWord.word,
+          wordId: drawnWord.id,
+          gameDuration: maxGameTime - remainingGameTime,
+        },
+      });
     })();
-  }, [gameOver]);
+  }, [gameOver, remainingGameTime]);
 
   useEffect(() => {
     if (hitsCount === drawnWord?.word.length || mistakesCount === 6) {
       setGameOver(true);
     }
   }, [hitsCount, mistakesCount]);
+
+  useEffect(() => {
+    if (gameOver || !drawnWord) return;
+
+    if (remainingGameTime === 0) {
+      return setGameOver(true);
+    }
+
+    const timeout = setTimeout(() => {
+      setRemainingGameTime((previousDuration) => previousDuration - 1);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, [remainingGameTime, drawnWord]);
 
   if (!drawnWord) {
     return (
@@ -100,9 +134,9 @@ export default function Game() {
       <View style={styles.header}>
         <ScreenHeader hideBackButton title="Descubra a palavra" />
 
-        <Pressable onPress={router.back} hitSlop={20}>
+        {/* <Pressable onPress={router.back} hitSlop={20}>
           <FlagIcon fill={colors.light[800]} />
-        </Pressable>
+        </Pressable>  */}
       </View>
 
       <View style={styles.lettersContainer}>
@@ -117,6 +151,13 @@ export default function Game() {
           {ongoingWord.map((letter, index) => (
             <Letter key={index} letter={letter} />
           ))}
+        </View>
+      </View>
+
+      <View style={styles.remainingTimeWrapper}>
+        <View style={styles.remainingTimeContainer}>
+          <AlarmClockIcon width={20} height={20} stroke={colors.white} />
+          <Text style={styles.remainingTimeText}>{remainingGameTime}</Text>
         </View>
       </View>
 
@@ -164,7 +205,7 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: colors.primary[600],
+    backgroundColor: colors.primary[700],
   },
   tipText: {
     ...typography.textSemibold,
@@ -175,6 +216,24 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flexWrap: "wrap",
     gap: 10,
+  },
+  remainingTimeWrapper: {
+    alignItems: "center",
+  },
+  remainingTimeContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 8,
+    borderRadius: 20,
+    backgroundColor: colors.primary[700],
+    width: 64,
+    height: 28,
+    paddingHorizontal: 8,
+  },
+  remainingTimeText: {
+    ...typography.textSemibold,
+    color: colors.white,
   },
   faceWrapper: {
     flex: 2,
