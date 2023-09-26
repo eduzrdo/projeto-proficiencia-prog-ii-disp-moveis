@@ -1,6 +1,6 @@
 import React, { createContext, ReactNode, useContext, useState } from "react";
 
-import { api } from "@/utils/axios";
+import { api } from "@/utils/api";
 
 export interface User {
   id: string;
@@ -77,7 +77,22 @@ type SaveGameResponse = ServerBaseResponse & {
 };
 
 export const UserContextProvider = ({ children }: UserContextProviderProps) => {
-  const [user, setUser] = useState<User | null>(null);
+  // UNCOMMENT TO USE MOCKED USER DATA
+  const [user, setUser] = useState<User | null>(
+    // {
+    //   admin: true,
+    //   avatar: "https://avatars.githubusercontent.com/u/43072438?v=4",
+    //   createdAt: "2023-09-26T17:44:30.830Z",
+    //   defeats: 0,
+    //   wins: 42,
+    //   games: 42,
+    //   id: "902730123905109234123",
+    //   playedWordsIds: [],
+    //   score: 29512,
+    //   username: "eduzrdo",
+    // }
+    null
+  );
   const [loading, setLoading] = useState(false);
 
   const signUp = async (username: string, password: string) => {

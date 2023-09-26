@@ -11,7 +11,7 @@ import { Loading } from "@/components/Loading";
 
 import { colors, sizes, typography } from "@/constants";
 import { User, useUser } from "@/hooks/UserContext";
-import { api } from "@/utils/axios";
+import { api } from "@/utils/api";
 import { formatScore } from "@/utils/formatScore";
 
 import TrophyIcon from "@/assets/svgs/trophy-icon.svg";

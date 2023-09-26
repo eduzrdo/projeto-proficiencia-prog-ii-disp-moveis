@@ -9,7 +9,7 @@ import { Input } from "@/components/Input";
 
 import { User } from "@/hooks/UserContext";
 import { colors, sizes, typography } from "@/constants";
-import { api } from "@/utils/axios";
+import { api } from "@/utils/api";
 
 import MagnifyingGlassIcon from "@/assets/svgs/magnifying-glass-icon.svg";
 
