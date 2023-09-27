@@ -4,6 +4,7 @@ import { Link } from "expo-router";
 import { Avatar } from "./Avatar";
 
 import { colors, sizes, typography } from "@/constants";
+import { formatScore } from "@/utils/formatScore";
 import { images } from "@/utils/images";
 
 import profilePicture from "@/assets/images/profile-picture-placeholder.png";
@@ -54,7 +55,7 @@ export const PlayerCard = ({
 
           <View style={styles.userScore}>
             <Text style={styles.playerUsername}>{playerUsername}</Text>
-            <Text style={styles.lowOrderText}>{score} pontos</Text>
+            <Text style={styles.lowOrderText}>{formatScore(score)} pontos</Text>
           </View>
         </View>
       </TouchableNativeFeedback>

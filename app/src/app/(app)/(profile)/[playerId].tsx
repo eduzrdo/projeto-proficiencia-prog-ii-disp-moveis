@@ -42,9 +42,9 @@ export default function Profile() {
   useFocusEffect(
     useCallback(() => {
       // COMMENTED CODE BELOW USED TO MOCK PLAYER DATA USING AUTHENTICATED USER
-      if (user) {
-        return setPlayerData(user);
-      }
+      // if (user) {
+      //   return setPlayerData(user);
+      // }
 
       fetchPlayerData();
     }, [])

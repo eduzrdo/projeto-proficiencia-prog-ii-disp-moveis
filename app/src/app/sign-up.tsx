@@ -39,8 +39,6 @@ export default function SignUp() {
 
   const { signUp, loading } = useUser();
 
-  console.log(images(selectedAvatar));
-
   const togglePassword = () => {
     setShowPassword(!showPassword);
   };
