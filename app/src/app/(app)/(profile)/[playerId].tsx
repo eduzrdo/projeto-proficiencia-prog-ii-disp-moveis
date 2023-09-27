@@ -12,6 +12,7 @@ import { User, useUser } from "@/hooks/UserContext";
 import { formatScore } from "@/utils/formatScore";
 import { formatDate } from "@/utils/formatDate";
 import { api } from "@/utils/api";
+import { images } from "@/utils/images";
 
 import TrophySmallIcon from "@/assets/svgs/trophy-small-icon.svg";
 import GradeIcon from "@/assets/svgs/grade-icon.svg";
@@ -70,7 +71,9 @@ export default function Profile() {
           <View>
             <Avatar
               source={
-                playerData.avatar ? { uri: playerData.avatar } : profilePicture
+                playerData.avatar
+                  ? { uri: images(playerData.avatar) }
+                  : profilePicture
               }
               size="big"
             />

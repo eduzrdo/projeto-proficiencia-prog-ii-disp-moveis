@@ -19,10 +19,10 @@ import { Avatar } from "@/components/Avatar";
 
 import { useUser } from "@/hooks/UserContext";
 import { colors, sizes, typography } from "@/constants";
+import { images } from "@/utils/images";
 
 import AtSignIcon from "@/assets/svgs/at-sign-icon.svg";
 import KeyIcon from "@/assets/svgs/key-icon.svg";
-import { api } from "@/utils/api";
 
 export default function SignUp() {
   const [username, setUsername] = useState("");
@@ -38,6 +38,8 @@ export default function SignUp() {
     !password || password.includes(" ") || password.length < 6;
 
   const { signUp, loading } = useUser();
+
+  console.log(images(selectedAvatar));
 
   const togglePassword = () => {
     setShowPassword(!showPassword);
@@ -129,7 +131,7 @@ export default function SignUp() {
         >
           <Avatar
             source={{
-              uri: `http://192.168.44.189:3333/avatar/${selectedAvatar}.png`,
+              uri: images(selectedAvatar),
             }}
           />
         </Pressable>
@@ -213,9 +215,7 @@ const Modal = ({ toggleModal, selectAvatar, ...rest }: ModalProps) => {
                     >
                       <Avatar
                         source={{
-                          uri: `http://192.168.44.189:3333/avatar/${(index + 1)
-                            .toString()
-                            .padStart(2, "0")}.png`,
+                          uri: images((index + 1).toString().padStart(2, "0")),
                         }}
                       />
                     </Pressable>

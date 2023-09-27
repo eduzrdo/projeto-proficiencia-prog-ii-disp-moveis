@@ -4,12 +4,13 @@ import { Link } from "expo-router";
 import { Avatar } from "./Avatar";
 
 import { colors, sizes, typography } from "@/constants";
+import { images } from "@/utils/images";
 
 import profilePicture from "@/assets/images/profile-picture-placeholder.png";
 
 type PlayerCardProps = {
   playerId: string;
-  avatarUrl?: string | null;
+  avatar?: string | null;
   playerUsername: string;
   rankPosition: number;
   score: number;
@@ -17,12 +18,12 @@ type PlayerCardProps = {
 
 export const PlayerCard = ({
   playerId,
-  avatarUrl,
+  avatar,
   playerUsername,
   rankPosition,
   score,
 }: PlayerCardProps) => {
-  const imageSource = avatarUrl ? { uri: avatarUrl } : profilePicture;
+  const imageSource = avatar ? { uri: images(avatar) } : profilePicture;
 
   return (
     <Link href={`/(app)/(profile)/${playerId}`} asChild>

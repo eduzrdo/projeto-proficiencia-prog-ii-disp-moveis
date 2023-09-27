@@ -15,9 +15,19 @@ fastify.get("/", async () => {
 });
 
 fastify.register(fastifyBcrypt);
+
+fastify.register(fastifyStatic, {
+  root: path.join(__dirname, "public"),
+});
 fastify.register(fastifyStatic, {
   root: path.join(__dirname, "public", "avatar"),
   prefix: "/avatar",
+  decorateReply: false,
+});
+fastify.register(fastifyStatic, {
+  root: path.join(__dirname, "public", "pages"),
+  prefix: "/pages",
+  decorateReply: false,
 });
 
 fastify.register(userRoute, { prefix: "/user" });
@@ -26,7 +36,7 @@ fastify.register(wordRoute, { prefix: "/word" });
 const start = async () => {
   try {
     const address = await fastify.listen({
-      port: serverConfig.serverPort,
+      port: serverConfig.port,
       host: "0.0.0.0",
     });
     console.log(`Server listening on ${address}...`);

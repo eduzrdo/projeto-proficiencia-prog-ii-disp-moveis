@@ -53,7 +53,7 @@ export default function Leaderboard() {
             <PlayerCard
               playerId={item.id}
               rankPosition={index + 1}
-              avatarUrl={item.avatar}
+              avatar={item.avatar}
               playerUsername={item.username}
               score={item.score}
             />

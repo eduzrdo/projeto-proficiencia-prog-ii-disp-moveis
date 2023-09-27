@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { fastify } from "../../server";
 import { calculateScore } from "../utils/calculateScore";
-import { serverConfig } from "../config/server";
+import console from "console";
 
 const username = z
   .string({
@@ -73,6 +73,10 @@ const userSchemaSaveGame = z.object({
     })
     .min(0)
     .max(1),
+});
+
+const userSchemaRemoveAllUsers = z.object({
+  adminPassword: z.string(),
 });
 
 const publicUserData = {
@@ -229,7 +233,7 @@ export const userController = {
         data: {
           username,
           password: hash,
-          avatar: `http://${serverConfig.serverAddress}:${serverConfig.serverPort}/avatar/${avatar}.png`,
+          avatar,
         },
       });
 
@@ -329,13 +333,22 @@ export const userController = {
     }
   },
 
-  removeAllUsers: async () => {
+  removeAllUsers: async (request: FastifyRequest) => {
     try {
-      const response = await prisma.user.deleteMany();
+      const { adminPassword } = userSchemaRemoveAllUsers.parse(request.query);
+
+      if (adminPassword !== process.env.ADMIN_PASSWORD) {
+        return {
+          ok: false,
+          error: "Senha incorreta.",
+        };
+      }
+
+      await prisma.user.deleteMany();
 
       return {
         ok: true,
-        data: response,
+        data: "Todos usuários deletados.",
       };
     } catch (error) {
       console.log(error);

@@ -17,6 +17,7 @@ import { formatScore } from "@/utils/formatScore";
 import TrophyIcon from "@/assets/svgs/trophy-icon.svg";
 import GamepadIcon from "@/assets/svgs/gamepad-icon.svg";
 import profilePicture from "@/assets/images/profile-picture-placeholder.png";
+import { images } from "@/utils/images";
 
 export default function Home() {
   const [top3players, setTop3players] = useState<User[]>([]);
@@ -48,7 +49,7 @@ export default function Home() {
               source={
                 user.avatar
                   ? {
-                      uri: user.avatar,
+                      uri: images(user.avatar),
                     }
                   : profilePicture
               }
@@ -86,7 +87,7 @@ export default function Home() {
               playerId={player.id}
               rankPosition={index + 1}
               playerUsername={player.username}
-              avatarUrl={player.avatar}
+              avatar={player.avatar}
               score={player.score}
             />
           ))}

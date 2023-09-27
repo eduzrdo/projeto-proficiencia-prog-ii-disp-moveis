@@ -16,7 +16,7 @@ model User {
   avatar         String?
   // email    String  @unique
   password       String
-  score          Float    @default(0)
+  score          Int      @default(0)
   wins           Int      @default(0)
   defeats        Int      @default(0)
   games          Int      @default(0)

@@ -1,5 +1,3 @@
-export const appConfig = {
-  // CHANGE TO CURRENT SERVER IP ADDRESS
-  serverAddress: "192.168.44.189",
-  serverPort: 3333,
-};
+export const serverConfig = {
+  address: "http://192.168.15.26:3333"
+}
