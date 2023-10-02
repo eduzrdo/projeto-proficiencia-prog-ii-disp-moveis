@@ -134,7 +134,7 @@ npm run dev
 npx expo start
 ```
 
-8. Escaneie o código QR que aparecerá no terminal, com a câmera do seu dispositivo dispositivo.
+1. Escaneie o código QR que aparecerá no terminal, com a câmera do seu dispositivo.
 
 ## :man_technologist: Autor
 
