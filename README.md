@@ -104,13 +104,11 @@ npm install
 npm install
 ```
 
-4. Após instalar as dependências, configure a url de conexão com o banco de dados. Crie um arquivo com o nome **.env** dentro da pasta server, e nesse arquivo crie a variável **DATABASE_URL**, onde seu valor é url de conexão:
+4. Após instalar as dependências, configure a url de conexão com o banco de dados. Crie um arquivo com o nome **.env** dentro da pasta server, e nesse arquivo crie a variável **DATABASE_URL**, onde seu valor é url de conexão obtida no [Mongo DB Atlas](#mongodb):
 
 ```
 DATABASE_URL="<URL_DE_CONEXÃO_AQUI>"
 ```
-
-**\<USER>** e **\<PASSWORD>** são obtidos no [Mongo DB Atlas](#mongodb).
 
 5. Agora altere o arquivo de configuração do app que se encontra em ***app/src/config/index.ts***, substituindo o IP pelo IP da sua rede, **a porta 3333 permanece a mesma**:
 
